@@ -12,235 +12,198 @@ class App(tk.Frame):
         
         ttk.Style().theme_use('classic')
         
-        # frame_brush
+        # frame1
         
-        self.frame_brush = ttk.Frame(
+        # brush
+        
+        self.frame1 = ttk.Frame(
             master,
             padding=10,
             width=400,
-            height=50
+            height=250
         )
-        self.frame_brush.pack(side = tk.TOP)
+        self.frame1.grid(column=0, row=0)
         
         self.label_brush = ttk.Label(
-            self.frame_brush,
+            self.frame1,
             text="brush"
         )
-        self.label_brush.pack(side = tk.LEFT)
+        self.label_brush.grid(column=0, row=0)
         
         self.progress_brush = tk.IntVar(0)
         self.pbar_brush = ttk.Progressbar(
-            self.frame_brush,
+            self.frame1,
             orient=tk.HORIZONTAL,
             variable=self.progress_brush,
             maximum=4,
             length=200,
             mode="determinate"
         )
-        self.pbar_brush.pack(side = tk.LEFT)
+        self.pbar_brush.grid(column=1, row=0)
         
         self.button_brush = ttk.Button(
-            self.frame_brush,
+            self.frame1,
             text="brush",
             command=self.button_brush
         )
-        self.button_brush.pack(side=tk.LEFT)
+        self.button_brush.grid(column=2, row=0)
         
         self.brush_completed = tk.StringVar()
         self.brush_completed.set("Not yet")
         self.label_brush_completed = ttk.Label(
-            self.frame_brush,
+            self.frame1,
             textvariable=self.brush_completed
         )
-        self.label_brush_completed.pack(side = tk.LEFT)
+        self.label_brush_completed.grid(column=3, row=0)
         
-        # frame_drink
-        
-        self.frame_drink = ttk.Frame(
-            master,
-            padding=10,
-            width=400,
-            height=50
-        )
-        self.frame_drink.pack(side = tk.TOP)
+        # drink
         
         self.label_drink = ttk.Label(
-            self.frame_drink,
+            self.frame1,
             text="drink"
         )
-        self.label_drink.pack(side = tk.LEFT)
+        self.label_drink.grid(column=0, row=1)
         
         self.progress_drink = tk.IntVar(0)
         self.pbar_drink = ttk.Progressbar(
-            self.frame_drink,
+            self.frame1,
             orient=tk.HORIZONTAL,
             variable=self.progress_drink,
             maximum=4,
             length=200,
             mode="determinate"
         )
-        self.pbar_drink.pack(side = tk.LEFT)
+        self.pbar_drink.grid(column=1, row=1)
         
         self.button_drink = ttk.Button(
-            self.frame_drink,
+            self.frame1,
             text="drink",
             command=self.button_drink
         )
-        self.button_drink.pack(side=tk.LEFT)
+        self.button_drink.grid(column=2, row=1)
         
         self.drink_completed = tk.StringVar()
         self.drink_completed.set("Not yet")
         self.label_drink_completed = ttk.Label(
-            self.frame_drink,
+            self.frame1,
             textvariable=self.drink_completed
         )
-        self.label_drink_completed.pack(side = tk.LEFT)
+        self.label_drink_completed.grid(column=3, row=1)
         
-        # frame_senobi
-        
-        self.frame_senobi = ttk.Frame(
-            master,
-            padding=10,
-            width=400,
-            height=50
-        )
-        self.frame_senobi.pack(side = tk.TOP)
+        # senobi
         
         self.label_senobi = ttk.Label(
-            self.frame_senobi,
+            self.frame1,
             text="senobi"
         )
-        self.label_senobi.pack(side = tk.LEFT)
+        self.label_senobi.grid(column=0, row=2)
         
         self.progress_senobi = tk.IntVar(0)
         self.pbar_senobi = ttk.Progressbar(
-            self.frame_senobi,
+            self.frame1,
             orient=tk.HORIZONTAL,
             variable=self.progress_senobi,
             maximum=4,
             length=200,
             mode="determinate"
         )
-        self.pbar_senobi.pack(side = tk.LEFT)
+        self.pbar_senobi.grid(column=1, row=2)
         
         self.button_senobi = ttk.Button(
-            self.frame_senobi,
+            self.frame1,
             text="senobi",
             command=self.button_senobi
         )
-        self.button_senobi.pack(side=tk.LEFT)
+        self.button_senobi.grid(column=2, row=2)
         
         self.senobi_completed = tk.StringVar()
         self.senobi_completed.set("Not yet")
         self.label_senobi_completed = ttk.Label(
-            self.frame_senobi,
+            self.frame1,
             textvariable=self.senobi_completed
         )
-        self.label_senobi_completed.pack(side = tk.LEFT)
+        self.label_senobi_completed.grid(column=3, row=2)
         
-        # frame_walk
-        
-        self.frame_walk = ttk.Frame(
-            master,
-            padding=10,
-            width=400,
-            height=50
-        )
-        self.frame_walk.pack(side = tk.TOP)
+        # walk
         
         self.label_walk = ttk.Label(
-            self.frame_walk,
+            self.frame1,
             text="senobi"
         )
-        self.label_walk.pack(side = tk.LEFT)
+        self.label_walk.grid(column=0, row=3)
         
         self.progress_walk = tk.IntVar(0)
         self.pbar_walk = ttk.Progressbar(
-            self.frame_walk,
+            self.frame1,
             orient=tk.HORIZONTAL,
             variable=self.progress_walk,
             maximum=4,
             length=200,
             mode="determinate"
         )
-        self.pbar_walk.pack(side = tk.LEFT)
+        self.pbar_walk.grid(column=1, row=3)
         
         self.button_walk = ttk.Button(
-            self.frame_walk,
+            self.frame1,
             text="walk",
             command=self.button_walk
         )
-        self.button_walk.pack(side=tk.LEFT)
+        self.button_walk.grid(column=2, row=3)
         
         self.walk_completed = tk.StringVar()
         self.walk_completed.set("Not yet")
         self.label_walk_completed = ttk.Label(
-            self.frame_walk,
+            self.frame1,
             textvariable=self.walk_completed
         )
-        self.label_walk_completed.pack(side = tk.LEFT)
+        self.label_walk_completed.grid(column=3, row=3)
         
-        # frame_face
-        
-        self.frame_face = ttk.Frame(
-            master,
-            padding=10,
-            width=400,
-            height=50
-        )
-        self.frame_face.pack(side = tk.TOP)
+        # face
         
         self.label_face = ttk.Label(
-            self.frame_face,
+            self.frame1,
             text="face"
         )
-        self.label_face.pack(side = tk.LEFT)
+        self.label_face.grid(column=0, row=4)
         
         self.progress_face = tk.IntVar(0)
         self.pbar_face = ttk.Progressbar(
-            self.frame_face,
+            self.frame1,
             orient=tk.HORIZONTAL,
             variable=self.progress_face,
             maximum=4,
             length=200,
             mode="determinate"
         )
-        self.pbar_face.pack(side = tk.LEFT)
+        self.pbar_face.grid(column=1, row=4)
         
         self.button_face = ttk.Button(
-            self.frame_face,
+            self.frame1,
             text="face",
             command=self.button_face
         )
-        self.button_face.pack(side=tk.LEFT)
+        self.button_face.grid(column=2, row=4)
         
         self.face_completed = tk.StringVar()
         self.face_completed.set("Not yet")
         self.label_face_completed = ttk.Label(
-            self.frame_face,
+            self.frame1,
             textvariable=self.face_completed
         )
-        self.label_face_completed.pack(side = tk.LEFT)
+        self.label_face_completed.grid(column=3, row=4)
         
-        # frame3
+        # frame2
         
-        self.frame3 = ttk.Frame(
+        self.frame2 = ttk.Frame(
             master,
             padding=10,
             width=400,
             height=400
         )
-        self.frame3.pack(side = tk.TOP)
+        self.frame2.grid(column=0, row=1)
         
-        self.text_completed = tk.StringVar("")
-        self.label2 = ttk.Label(
-            self.frame3,
-            textvariable=self.text_completed
-        )
-        self.label2.pack(side=tk.TOP)
-        
-        self.canvas = tk.Canvas(self.frame3)
-        self.canvas.pack()
+        self.canvas = tk.Canvas(self.frame2)
+        self.canvas.grid(column=0, row=0)
         self.img_sleep = ImageTk.PhotoImage(Image.open('images/sleep.png').resize((200,200)))
         self.img_brush = ImageTk.PhotoImage(Image.open('images/brush.png').resize((200,200)))
         self.img_drink = ImageTk.PhotoImage(Image.open('images/drink.png').resize((200,200)))
