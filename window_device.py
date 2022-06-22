@@ -14,8 +14,6 @@ class App(tk.Frame):
         
         # frame1
         
-        # brush
-        
         self.frame1 = ttk.Frame(
             master,
             padding=10,
@@ -23,6 +21,8 @@ class App(tk.Frame):
             height=250
         )
         self.frame1.grid(column=0, row=0)
+        
+        # brush
         
         self.label_brush = ttk.Label(
             self.frame1,
