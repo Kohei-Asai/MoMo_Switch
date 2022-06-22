@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import ImageTk, Image
+from playsound import playsound
 
 class App(tk.Frame):
     def __init__(self, master = None):
@@ -262,6 +263,7 @@ class App(tk.Frame):
         if self.progress_brush.get() >= 4:
             self.brush_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            playsound("sounds/jenga.mp3")
         elif  1 <= self.progress_brush.get() <= 3:
             self.brush_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_brush)
@@ -275,6 +277,7 @@ class App(tk.Frame):
         if self.progress_drink.get() >= 4:
             self.drink_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            playsound("sounds/jenga.mp3")
         elif  1 <= self.progress_drink.get() <= 3:
             self.drink_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_drink)
@@ -288,6 +291,7 @@ class App(tk.Frame):
         if self.progress_senobi.get() >= 4:
             self.senobi_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            playsound("sounds/jenga.mp3")
         elif  1 <= self.progress_senobi.get() <= 3:
             self.senobi_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_senobi)
@@ -301,6 +305,7 @@ class App(tk.Frame):
         if self.progress_walk.get() >= 4:
             self.walk_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            playsound("sounds/jenga.mp3")
         elif  1 <= self.progress_senobi.get() <= 3:
             self.walk_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_walk)
@@ -314,6 +319,7 @@ class App(tk.Frame):
         if self.progress_face.get() >= 4:
             self.face_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            playsound("sounds/jenga.mp3")
         elif  1 <= self.progress_face.get() <= 3:
             self.face_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_face)
