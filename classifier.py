@@ -21,7 +21,7 @@ class LSTMClassifier(nn.Module):
         scores = self.softmax(out)
         scores = torch.t(scores)
         return scores
-    
+
 def mat2array(load_path):
     mat = scipy.io.loadmat(load_path)
     x = mat['x']

@@ -21,6 +21,7 @@ class App(tk.Frame):
         self.progress_senobi = tk.IntVar(0)
         self.progress_walk = tk.IntVar(0)
         self.progress_face = tk.IntVar(0)
+        self.progress_all = tk.IntVar(0)
         
         # frame1
         
@@ -125,7 +126,6 @@ class App(tk.Frame):
         )
         label_all.grid(column=0, row=5)
 
-        self.progress_all = tk.IntVar(0)
         pbar_all = ttk.Progressbar(
             frame1,
             orient=tk.HORIZONTAL,
