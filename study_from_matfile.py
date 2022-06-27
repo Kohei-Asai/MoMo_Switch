@@ -50,6 +50,18 @@ class LSTMClassifier(nn.Module):
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 train_data = make_tensors_from_mat(['/content/data_1.mat', '/content/data_2.mat', '/content/data_3.mat', '/content/data_4.mat'])
+
+INPUT_DIM = 9
+HIDDEN_DIM = 128
+TARGET_DIM = 5
+model = LSTMClassifier(INPUT_DIM, HIDDEN_DIM, TARGET_DIM)
+
+#学習済みモデルを使いたい場合
+#model_path = 'model.pth'
+#model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+
+model.to(device)
+
 from sklearn.model_selection import train_test_split
 import torch.optim as optim
 
