@@ -49,7 +49,7 @@ class LSTMClassifier(nn.Module):
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-train_data = make_tensors_from_mat(['/content/data_1.mat', '/content/data_2.mat', '/content/data_3.mat', '/content/data_4.mat'])
+train_data = make_tensors_from_mat(['data/data_1.mat', 'data/data_2.mat', 'data/data_3.mat', 'data/data_4.mat'])
 
 INPUT_DIM = 9
 HIDDEN_DIM = 128
@@ -114,7 +114,7 @@ def compare_accuracy(answer_tensor, prediction_tensor):
       correct += 1
   return correct / length
 
-test_x, test_y = make_tensors_from_mat(['/content/data_5.mat'])[0]
+test_x, test_y = make_tensors_from_mat(['data/data_5.mat'])[0]
 predicted_y = classificate(model, test_x, -0.15)
 print(compare_accuracy(test_y, predicted_y))
 compare_graph(test_y, predicted_y)

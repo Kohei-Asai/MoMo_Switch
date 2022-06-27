@@ -27,7 +27,7 @@ def make_tensors_from_mat(load_paths):
         data.append((x, y))
     return data
 
-test_x, test_y = make_tensors_from_mat(['data_5.mat'])[0]
+test_x, test_y = make_tensors_from_mat(['data/data_5.mat'])[0]
 
 class LSTMClassifier(nn.Module):
     def __init__(self, input_dim, hidden_dim, target_dim):
