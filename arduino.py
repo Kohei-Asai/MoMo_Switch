@@ -1,4 +1,12 @@
-import classifier
+import random
 
 def get():
-    return [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    return [random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10)]

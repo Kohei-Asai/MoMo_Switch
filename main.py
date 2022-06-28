@@ -273,14 +273,12 @@ class App(tk.Frame):
         canvas.get_tk_widget().grid(column = 0, row = 0)
             
     def loop(self):
-        # for文使ってarduinoから受け取った値を配列にする処理を書く
         data = []
         for _ in range(120):
             acc = arduino.get()
             data.append(acc)
             time.sleep(1/120)
 
-        # 予測する
         x = torch.tensor(data, dtype=torch.float)
         result = classifier.classificate(model, x)[-1]
         
