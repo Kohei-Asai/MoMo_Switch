@@ -4,6 +4,7 @@ from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
+import arduino
 
 class App(tk.Frame):
     def __init__(self, master = None):
@@ -250,9 +251,25 @@ class App(tk.Frame):
         canvas = FigureCanvasTkAgg(fig, master=dlg)
         canvas.draw()
         canvas.get_tk_widget().grid(column = 0, row = 0)
-
+        
+    def loop(self):
+        result = arduino.ramdom_generate()
+        
+        if result == 0:
+            self.button_brush()
+        elif result == 1:
+            self.button_drink()
+        elif result == 2:
+            self.button_face()
+        elif result == 3:
+            self.button_walk()
+        elif result == 4:
+            self.button_senobi()
+            
+        self.after(1000, self.loop)
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(master = root)
+    app.after(1000, app.loop)
     app.mainloop()
