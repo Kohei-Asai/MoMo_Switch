@@ -1,4 +1,4 @@
-import random
+import classifier
 
-def ramdom_generate():
-    return random.randint(0, 5)
+def get():
+    return [0, 0, 0, 0, 0, 0, 0, 0, 0]

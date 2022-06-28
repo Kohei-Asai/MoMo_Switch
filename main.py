@@ -1,10 +1,14 @@
+import os
+import time
 import tkinter as tk
 from tkinter import ttk
 from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
+import torch
 import arduino
+import classifier
 
 class App(tk.Frame):
     def __init__(self, master = None):
@@ -270,7 +274,16 @@ class App(tk.Frame):
         canvas.get_tk_widget().grid(column = 0, row = 0)
             
     def loop(self):
-        result = arduino.ramdom_generate()
+        # for文使ってarduinoから受け取った値を配列にする処理を書く
+        data = []
+        for _ in range(120):
+            acc = arduino.get()
+            data.append(acc)
+            time.sleep(1/120)
+
+        # 予測する
+        x = torch.tensor(data, dtype=torch.float)
+        result = classifier.classificate(model, x)[-1]
         
         if result == 0:
             self.update_brush()
@@ -285,7 +298,7 @@ class App(tk.Frame):
         else:
             self.update_nothing()
             
-        self.jobID = self.after(1000, self.loop)
+        self.jobID = self.after(1, self.loop)
         
     def start(self):
         self.after(1000, self.loop)
@@ -295,5 +308,11 @@ class App(tk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
+    model = classifier.load_model(
+        model_path='model_9freedom.pth',
+        input_dim=9,
+        hidden_dim=128,
+        target_dim=5
+    )
     app = App(master = root)
     app.mainloop()
