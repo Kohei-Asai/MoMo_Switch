@@ -5,6 +5,8 @@ from torch.autograd import Variable
 import math
 import pandas as pd
 import numpy as np
+import csv
+
 
 def mat2array(load_path):
   import scipy.io
@@ -21,6 +23,24 @@ def make_tensors_from_mat(load_paths):
     x = torch.t(torch.tensor(x, dtype=torch.float))
     x = x.to(device)
     y = torch.tensor(y, dtype=torch.long)
+    y = y.to(device)
+    data.append((x, y))
+  return data
+
+def make_tensors_from_csv(load_paths):
+  data = []
+  for load_path in load_paths:
+    with open(load_path, 'r') as f:
+      reader = csv.reader(f)
+      data_rows = []
+      for row in reader:
+        data_one_row = []
+        for item in row:
+          data_one_row.append(float(item))
+        data_rows.append(data_one_row)
+    x = torch.t(torch.tensor(data_rows[:-1], dtype=torch.float))
+    x = x.to(device)
+    y = torch.tensor(data_rows[-1], dtype=torch.long)
     y = y.to(device)
     data.append((x, y))
   return data
@@ -49,7 +69,12 @@ class LSTMClassifier(nn.Module):
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-train_data = make_tensors_from_mat(['data/data_1.mat', 'data/data_2.mat', 'data/data_3.mat', 'data/data_4.mat'])
+
+#mat
+#train_data = make_tensors_from_mat(['data/data_1.mat', 'data/data_2.mat', 'data/data_3.mat', 'data/data_4.mat'])
+
+#csv
+make_tensors_from_csv(['kari.csv'])
 
 INPUT_DIM = 9
 HIDDEN_DIM = 128
