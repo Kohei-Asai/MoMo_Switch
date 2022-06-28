@@ -39,7 +39,7 @@ class App(tk.Frame):
         button_brush = ttk.Button(
             frame1,
             text="brush",
-            command=self.button_brush
+            command=self.update_brush
         )
         button_brush.grid(column=0, row=0)
         
@@ -56,7 +56,7 @@ class App(tk.Frame):
         button_drink = ttk.Button(
             frame1,
             text="drink",
-            command=self.button_drink
+            command=self.update_drink
         )
         button_drink.grid(column=0, row=1)
         
@@ -73,7 +73,7 @@ class App(tk.Frame):
         button_senobi = ttk.Button(
             frame1,
             text="senobi",
-            command=self.button_senobi
+            command=self.update_senobi
         )
         button_senobi.grid(column=0, row=2)
         
@@ -90,7 +90,7 @@ class App(tk.Frame):
         button_walk = ttk.Button(
             frame1,
             text="walk",
-            command=self.button_walk
+            command=self.update_walk
         )
         button_walk.grid(column=0, row=3)
         
@@ -107,7 +107,7 @@ class App(tk.Frame):
         button_face = ttk.Button(
             frame1,
             text="face",
-            command=self.button_face
+            command=self.update_face
         )
         button_face.grid(column=0, row=4)
         
@@ -149,7 +149,7 @@ class App(tk.Frame):
         
         self.canvas = tk.Canvas(frame2)
         self.canvas.grid(column=0, row=0)
-        self.img_sleep = ImageTk.PhotoImage(Image.open('images/sleep.png').resize((200,200)))
+        self.img_nothing = ImageTk.PhotoImage(Image.open('images/sleep.png').resize((200,200)))
         self.img_brush = ImageTk.PhotoImage(Image.open('images/brush.png').resize((200,200)))
         self.img_drink = ImageTk.PhotoImage(Image.open('images/drink.png').resize((200,200)))
         self.img_senobi = ImageTk.PhotoImage(Image.open('images/senobi.png').resize((200,200)))
@@ -162,7 +162,7 @@ class App(tk.Frame):
         self.show_image = self.canvas.create_image(
             w / 2,
             h / 2,                   
-            image=self.img_sleep
+            image=self.img_nothing
         )
         
         # frame 3
@@ -175,14 +175,28 @@ class App(tk.Frame):
         )
         frame3.grid(column=0, row=2)
         
+        button_start = ttk.Button(
+            frame3,
+            text="start",
+            command=self.start
+        )
+        button_start.grid(column=0, row=0)
+        
+        button_stop = ttk.Button(
+            frame3,
+            text="stop",
+            command=self.stop
+        )
+        button_stop.grid(column=1, row=0)
+        
         button_report = ttk.Button(
             frame3,
             text="report",
             command=self.create_dialog_graph
         )
-        button_report.grid(column=0, row=0)
+        button_report.grid(column=2, row=0)
 
-    def button_brush(self):
+    def update_brush(self):
         if self.progress_brush.get() >= 4:
             self.brush_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
@@ -192,7 +206,7 @@ class App(tk.Frame):
             self.brush_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_brush)
             
-    def button_drink(self):
+    def update_drink(self):
         if self.progress_drink.get() >= 4:
             self.drink_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
@@ -202,7 +216,7 @@ class App(tk.Frame):
             self.drink_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_drink)
             
-    def button_senobi(self):
+    def update_senobi(self):
         if self.progress_senobi.get() >= 4:
             self.senobi_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
@@ -212,7 +226,7 @@ class App(tk.Frame):
             self.senobi_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_senobi)
             
-    def button_walk(self):
+    def update_walk(self):
         if self.progress_walk.get() >= 4:
             self.walk_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
@@ -222,7 +236,7 @@ class App(tk.Frame):
             self.walk_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_walk)
             
-    def button_face(self):
+    def update_face(self):
         if self.progress_face.get() >= 4:
             self.face_completed.set("Task Completed!")
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
@@ -231,6 +245,9 @@ class App(tk.Frame):
             self.progress_all.set(self.progress_all.get() + 1)
             self.face_completed.set("Doing......")
             self.canvas.itemconfig(self.show_image, image=self.img_face)
+            
+    def update_nothing(self):
+        self.canvas.itemconfig(self.show_image, image=self.img_nothing)
             
     def create_dialog_graph(self):
         dlg = tk.Toplevel(self)
@@ -251,25 +268,32 @@ class App(tk.Frame):
         canvas = FigureCanvasTkAgg(fig, master=dlg)
         canvas.draw()
         canvas.get_tk_widget().grid(column = 0, row = 0)
-        
+            
     def loop(self):
         result = arduino.ramdom_generate()
         
         if result == 0:
-            self.button_brush()
+            self.update_brush()
         elif result == 1:
-            self.button_drink()
+            self.update_drink()
         elif result == 2:
-            self.button_face()
+            self.update_face()
         elif result == 3:
-            self.button_walk()
+            self.update_walk()
         elif result == 4:
-            self.button_senobi()
+            self.update_senobi()
+        else:
+            self.update_nothing()
             
+        self.jobID = self.after(1000, self.loop)
+        
+    def start(self):
         self.after(1000, self.loop)
+        
+    def stop(self):
+        self.after_cancel(self.jobID)
 
 if __name__ == "__main__":
     root = tk.Tk()
     app = App(master = root)
-    app.after(1000, app.loop)
     app.mainloop()
