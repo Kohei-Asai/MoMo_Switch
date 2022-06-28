@@ -12,3 +12,5 @@ model = classifier.load_model(
 predicted_y = classifier.classificate(model, test_x, -0.15)
 
 classifier.compare_graph(test_y, predicted_y)
+
+print(classifier.index2category[0])
