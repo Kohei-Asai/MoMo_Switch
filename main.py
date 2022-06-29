@@ -9,6 +9,7 @@ import torch
 import arduino
 import classifier
 from ttkthemes import *
+import kakugen
 
 class App(tk.Frame):
     def __init__(self, master = None):
@@ -275,23 +276,54 @@ class App(tk.Frame):
             
     def create_dialog_graph(self):
         dlg = tk.Toplevel(self)
-        dlg.title("今日の結果")
-        dlg.geometry("1000x800")
+        dlg.title("分析レポート")
+        dlg.geometry("700x650")
         
-        fig = plt.figure()
+        notebook = ttk.Notebook(dlg)
+        notebook.pack(expand=True, fill='both', padx=20, pady=20)
+        tab_one = ttk.Frame(notebook)
+        tab_two = ttk.Frame(notebook)
+        
+        notebook.add(tab_one, text="今日の結果")
+        notebook.add(tab_two, text="tab2")
+        
+        fig = self.graph_today()
+        canvas = FigureCanvasTkAgg(fig, master=tab_one)
+        canvas.draw()
+        canvas.get_tk_widget().grid(column=0, row=0)
+        
+        label_kakugen = ttk.Label(
+            tab_one,
+            text="【今日の格言】",
+            foreground='white',
+            font=("游明朝", 30)
+        )
+        label_kakugen.grid(column=0, row=1)
+        
+        msg = kakugen.random_generate()
+        label_content = ttk.Label(
+            tab_one,
+            text=msg,
+            foreground='white',
+            font=("游明朝", 30)
+        )
+        label_content.grid(column=0, row=2, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+    def graph_today(self):
+        fig = plt.figure(figsize=(4,3))
         ax = fig.add_subplot()
         x = np.array([1, 2, 3, 4, 5])
-        y = np.array([self.progress_brush.get()*25,
-                        self.progress_drink.get()*25,
-                        self.progress_senobi.get()*25,
-                        self.progress_walk.get()*25,
-                        self.progress_face.get()*25])
-        label = np.array(['brush', 'drink', 'senobi', 'walk', 'face'])
+        y = np.array([
+            self.progress_brush.get()*25,
+            self.progress_drink.get()*25,
+            self.progress_senobi.get()*25,
+            self.progress_walk.get()*25,
+            self.progress_face.get()*25
+        ])
+        label = np.array(['Brush', 'Drink', 'Senobi', 'Walk', 'Face'])
         ax.bar(x, y, tick_label=label)
         ax.set_ylabel("scores")
-        canvas = FigureCanvasTkAgg(fig, master=dlg)
-        canvas.draw()
-        canvas.get_tk_widget().grid(column = 0, row = 0)
+        return fig
             
     def loop(self):
         data = []
