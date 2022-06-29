@@ -6,7 +6,7 @@ import math
 import pandas as pd
 import numpy as np
 import csv
-
+import torch.optim as optim
 
 def mat2array(load_path):
   import scipy.io
@@ -16,7 +16,7 @@ def mat2array(load_path):
   y = y[0]
   return (x, y)
 
-def make_tensors_from_mat(load_paths):
+def make_tensors_from_mat(load_paths, device='cpu'):
   data = []
   for load_path in load_paths:
     x, y = mat2array(load_path)
@@ -27,7 +27,7 @@ def make_tensors_from_mat(load_paths):
     data.append((x, y))
   return data
 
-def make_tensors_from_csv(load_paths):
+def make_tensors_from_csv(load_paths, device='cpu'):
   data = []
   for load_path in load_paths:
     with open(load_path, 'r') as f:
@@ -45,8 +45,14 @@ def make_tensors_from_csv(load_paths):
     data.append((x, y))
   return data
 
-index2category = {0:'Brush', 1:'Drink', 2:'WashFace', 3:'Walk', 4:'Senobi'}
-category2index = {'Brush':0, "Drink":1, "WashFace":2, "Walk":3, "Senobi":4}
+def index2category(index):
+  this_dic = {0:'Brush', 1:'Drink', 2:'WashFace', 3:'Walk', 4:'Senobi'}
+  return this_dic[index]
+
+def category2index(cat):
+  this_dic = {'Brush':0, "Drink":1, "WashFace":2, "Walk":3, "Senobi":4}
+  return this_dic[cat]
+
 def category2tensor(cat):
     return torch.tensor([category2index[cat]], dtype=torch.long)
 
@@ -67,51 +73,46 @@ class LSTMClassifier(nn.Module):
 
 
 
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+def get_device():
+  return torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 #mat
 #train_data = make_tensors_from_mat(['data/data_1.mat', 'data/data_2.mat', 'data/data_3.mat', 'data/data_4.mat'])
 
-#csv
-make_tensors_from_csv(['kari.csv'])
+#csv(['kari.csv'])
 
-INPUT_DIM = 9
-HIDDEN_DIM = 128
-TARGET_DIM = 5
-model = LSTMClassifier(INPUT_DIM, HIDDEN_DIM, TARGET_DIM)
+def get_new_model(input_dim=9, hidden_dim=128, target_dim=5, device='cpu'):
+  model = LSTMClassifier(input_dim, hidden_dim, target_dim)
+  model.to(device)
+  return model
 
-#学習済みモデルを使いたい場合
-#model_path = 'model.pth'
-#model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+def load_model(model_path, input_dim=9, hidden_dim=128, target_dim=5, device='cpu'):
+  model = LSTMClassifier(input_dim, hidden_dim, target_dim)
+  model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
+  model.to(device)
+  return model
 
-model.to(device)
+def study(model, train_data, num_epochs=50):
+  loss_function = nn.NLLLoss()
+  optimizer = optim.Adam(model.parameters())
+  losses = []
+  for epoch in range(num_epochs):
+    all_loss = 0
+    for inputs, answer in train_data:
+      model.zero_grad()
+      out = model(inputs)
+      loss = loss_function(torch.unsqueeze(out, 0), torch.unsqueeze(answer, 0))
+      loss.backward()
+      optimizer.step()
+      all_loss += loss.item()
+    losses.append(all_loss)
+    print("epoch", epoch, "\t", "loss", all_loss)
+  print("done.")
+  return model
 
-from sklearn.model_selection import train_test_split
-import torch.optim as optim
-
-loss_function = nn.NLLLoss()
-optimizer = optim.Adam(model.parameters())
-
-losses = []
-
-NUM_EPOCHS = 50
-
-for epoch in range(NUM_EPOCHS):
-  all_loss = 0
-  for inputs, answer in train_data:
-    model.zero_grad()
-    out = model(inputs)
-    loss = loss_function(torch.unsqueeze(out, 0), torch.unsqueeze(answer, 0))
-    loss.backward()
-    optimizer.step()
-    all_loss += loss.item()
-  losses.append(all_loss)
-  print("epoch", epoch, "\t", "loss", all_loss)
-print("done.")
-
-save_path = '/content/model.pth'
-torch.save(model.state_dict(), save_path)
+def save_model(model, save_path):
+  #save_path = '/content/model.pth'
+  torch.save(model.state_dict(), save_path)
 
 
 def classificate(model, x, threshold=-float('inf')):
@@ -139,7 +140,7 @@ def compare_accuracy(answer_tensor, prediction_tensor):
       correct += 1
   return correct / length
 
-test_x, test_y = make_tensors_from_mat(['data/data_5.mat'])[0]
-predicted_y = classificate(model, test_x, -0.15)
-print(compare_accuracy(test_y, predicted_y))
-compare_graph(test_y, predicted_y)
+#test_x, test_y = make_tensors_from_mat(['data/data_5.mat'])[0]
+#predicted_y = classificate(model, test_x, -0.15)
+#print(compare_accuracy(test_y, predicted_y))
+#compare_graph(test_y, predicted_y)
