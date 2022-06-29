@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import csv
 import torch.optim as optim
+import matplotlib.pyplot as plt
 
 def mat2array(load_path):
   import scipy.io
@@ -117,14 +118,11 @@ def save_model(model, save_path):
 
 def classificate(model, x, threshold=-float('inf')):
   y = model.forward(x)
-  y_added = torch.vstack([y, torch.tensor([threshold] * y.shape[1]).to(device)])
+  y_added = torch.vstack([y, torch.tensor([threshold] * y.shape[1])])
   classified = torch.argmax(y_added, dim=0)
   return classified
 
 def compare_graph(answer_tensor, prediction_tensor):
-  import matplotlib.pyplot as plt
-  import torch
-  import numpy as np
   HZ = 100
   answer_np = answer_tensor.to('cpu').detach().numpy().copy()
   prediction_np = prediction_tensor.to('cpu').detach().numpy().copy()
