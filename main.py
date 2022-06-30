@@ -322,6 +322,7 @@ class App(tk.Frame):
         ])
         label = np.array(['Brush', 'Drink', 'Senobi', 'Walk', 'Face'])
         ax.bar(x, y, tick_label=label)
+        ax.set_ylim([0, 100])
         ax.set_ylabel("scores")
         return fig
             
