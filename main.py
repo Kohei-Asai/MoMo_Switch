@@ -1,15 +1,15 @@
 import time
 import tkinter as tk
 from tkinter import ttk
+from ttkthemes import *
 from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-from sqlalchemy import column
 import torch
+from pygame import mixer
 import arduino
 import classifier
-from ttkthemes import *
 import kakugen
 
 class App(tk.Frame):
@@ -30,6 +30,12 @@ class App(tk.Frame):
         self.progress_walk = tk.IntVar(0)
         self.progress_face = tk.IntVar(0)
         self.progress_all = tk.IntVar(0)
+        
+        self.done_brush = False
+        self.done_drink = False
+        self.done_senobi = False
+        self.done_walk = False
+        self.done_face = False
         
         frame = ttk.Frame(
             master,
@@ -226,6 +232,11 @@ class App(tk.Frame):
         if self.progress_brush.get() >= 4:
             self.label_brush_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            if self.done_brush == False:
+                self.done_brush = True
+                mixer.init()
+                mixer.music.load("sounds/complete.mp3")
+                mixer.music.play(1)
         else:
             self.progress_brush.set(self.progress_brush.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -236,6 +247,11 @@ class App(tk.Frame):
         if self.progress_drink.get() >= 4:
             self.label_drink_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            if self.done_drink == False:
+                self.done_drink = True
+                mixer.init()
+                mixer.music.load("sounds/complete.mp3")
+                mixer.music.play(1)
         else:
             self.progress_drink.set(self.progress_drink.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -246,6 +262,11 @@ class App(tk.Frame):
         if self.progress_senobi.get() >= 4:
             self.label_senobi_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            if self.done_senobi == False:
+                self.done_senobi = True
+                mixer.init()
+                mixer.music.load("sounds/complete.mp3")
+                mixer.music.play(1)
         else:
             self.progress_senobi.set(self.progress_senobi.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -256,6 +277,11 @@ class App(tk.Frame):
         if self.progress_walk.get() >= 4:
             self.label_walk_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            if self.done_walk == False:
+                self.done_walk = True
+                mixer.init()
+                mixer.music.load("sounds/complete.mp3")
+                mixer.music.play(1)
         else:
             self.progress_walk.set(self.progress_walk.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -266,6 +292,11 @@ class App(tk.Frame):
         if self.progress_face.get() >= 4:
             self.label_face_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            if self.done_face == False:
+                self.done_face = True
+                mixer.init()
+                mixer.music.load("sounds/complete.mp3")
+                mixer.music.play(1)
         else:
             self.progress_face.set(self.progress_face.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -386,9 +417,18 @@ class App(tk.Frame):
         
     def start(self):
         self.after(1000, self.loop)
+        mixer.init()
+        mixer.music.load("sounds/start.mp3")
+        mixer.music.play(1)
+        time.sleep(0.5)
+        mixer.music.load("sounds/csikos.mp3")
+        mixer.music.play(1)
         
     def stop(self):
         self.after_cancel(self.jobID)
+        mixer.init()
+        mixer.music.load("sounds/finish.mp3")
+        mixer.music.play(1)
 
 if __name__ == "__main__":
     root = ThemedTk()
