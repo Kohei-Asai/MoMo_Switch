@@ -393,7 +393,8 @@ class App(tk.Frame):
     def loop(self):
         data = []
         for _ in range(120):
-            acc = arduino.get()
+            # dataどうやって受け取ればよい？
+            acc = ble.notification_handler()
             data.append(acc)
             time.sleep(1/120)
 
@@ -417,6 +418,7 @@ class App(tk.Frame):
         
     def start(self):
         self.after(1000, self.loop)
+        ble.run(arduino.ADDRESS)
         mixer.init()
         mixer.music.load("sounds/start.mp3")
         mixer.music.play(1)
@@ -438,5 +440,6 @@ if __name__ == "__main__":
         hidden_dim=128,
         target_dim=5
     )
+    ble = arduino.Esp32Ble()
     app = App(master = root)
     app.mainloop()
