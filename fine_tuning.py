@@ -3,9 +3,6 @@ import torch
 import torch.nn as nn
 import numpy as np
 from classifier import LSTMClassifier
-import glob
-import csv
-import os
 
 INPUT_DIM = 9
 HIDDEN_DIM = 128

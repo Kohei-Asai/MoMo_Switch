@@ -1,11 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.autograd import Variable
-import math
-import pandas as pd
 import numpy as np
-import csv
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
