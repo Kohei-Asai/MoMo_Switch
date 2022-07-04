@@ -39,9 +39,10 @@ def make_tensors_from_csv(load_paths, device='cpu'):
         for item in row:
           data_one_row.append(float(item))
         data_rows.append(data_one_row)
-    x = torch.t(torch.tensor(data_rows[:-1], dtype=torch.float))
+    all_matrix = torch.tensor(data_rows, dtype=torch.float)
+    x = all_matrix[:, :-1]
     x = x.to(device)
-    y = torch.tensor(data_rows[-1], dtype=torch.long)
+    y = all_matrix[:, -1]
     y = y.to(device)
     data.append((x, y))
   return data
@@ -142,3 +143,7 @@ def compare_accuracy(answer_tensor, prediction_tensor):
 #predicted_y = classificate(model, test_x, -0.15)
 #print(compare_accuracy(test_y, predicted_y))
 #compare_graph(test_y, predicted_y)
+
+if __name__ == '__main__':
+  the_tensor = make_tensors_from_csv(['data/person1/Drink/1.csv', 'data/person1/Walk/1.csv'])
+  print(the_tensor[1])
