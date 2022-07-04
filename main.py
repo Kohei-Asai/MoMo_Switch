@@ -1,15 +1,15 @@
 import time
 import tkinter as tk
 from tkinter import ttk
+from ttkthemes import *
 from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-from sqlalchemy import column
 import torch
+from pygame import mixer
 import arduino
 import classifier
-from ttkthemes import *
 import kakugen
 
 class App(tk.Frame):
@@ -226,6 +226,9 @@ class App(tk.Frame):
         if self.progress_brush.get() >= 4:
             self.label_brush_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            mixer.init()
+            mixer.music.load("sounds/complete.mp3")
+            mixer.music.play(1)
         else:
             self.progress_brush.set(self.progress_brush.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -236,6 +239,9 @@ class App(tk.Frame):
         if self.progress_drink.get() >= 4:
             self.label_drink_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            mixer.init()
+            mixer.music.load("sounds/complete.mp3")
+            mixer.music.play(1)
         else:
             self.progress_drink.set(self.progress_drink.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -246,6 +252,9 @@ class App(tk.Frame):
         if self.progress_senobi.get() >= 4:
             self.label_senobi_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            mixer.init()
+            mixer.music.load("sounds/complete.mp3")
+            mixer.music.play(1)
         else:
             self.progress_senobi.set(self.progress_senobi.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -256,6 +265,9 @@ class App(tk.Frame):
         if self.progress_walk.get() >= 4:
             self.label_walk_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            mixer.init()
+            mixer.music.load("sounds/complete.mp3")
+            mixer.music.play(1)
         else:
             self.progress_walk.set(self.progress_walk.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -266,6 +278,9 @@ class App(tk.Frame):
         if self.progress_face.get() >= 4:
             self.label_face_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
+            mixer.init()
+            mixer.music.load("sounds/complete.mp3")
+            mixer.music.play(1)
         else:
             self.progress_face.set(self.progress_face.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
