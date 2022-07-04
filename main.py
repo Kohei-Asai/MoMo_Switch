@@ -420,7 +420,7 @@ class App(tk.Frame):
         mixer.init()
         mixer.music.load("sounds/start.mp3")
         mixer.music.play(1)
-        time.sleep(0.8)
+        time.sleep(0.5)
         mixer.music.load("sounds/csikos.mp3")
         mixer.music.play(1)
         
