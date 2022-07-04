@@ -5,6 +5,7 @@ from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
+from sqlalchemy import column
 import torch
 import arduino
 import classifier
@@ -281,19 +282,32 @@ class App(tk.Frame):
         
         notebook = ttk.Notebook(dlg)
         notebook.pack(expand=True, fill='both', padx=20, pady=20)
-        tab_one = ttk.Frame(notebook)
-        tab_two = ttk.Frame(notebook)
+        tab1 = ttk.Frame(
+            notebook,
+            width=600,
+            height=600
+        )
+        tab2 = ttk.Frame(
+            notebook,
+            width=600,
+            height=600
+        )
         
-        notebook.add(tab_one, text="今日の結果")
-        notebook.add(tab_two, text="tab2")
+        notebook.add(tab1, text="今日の結果")
+        notebook.add(tab2, text="3日間の結果")
         
-        fig = self.graph_today()
-        canvas = FigureCanvasTkAgg(fig, master=tab_one)
-        canvas.draw()
-        canvas.get_tk_widget().grid(column=0, row=0)
+        fig_today = self.graph_today()
+        canvas_today = FigureCanvasTkAgg(fig_today, master=tab1)
+        canvas_today.draw()
+        canvas_today.get_tk_widget().grid(column=0, row=0)
+        
+        fig_3days = self.graph_3days()
+        canvas_3days = FigureCanvasTkAgg(fig_3days, master=tab2)
+        canvas_3days.draw()
+        canvas_3days.get_tk_widget().grid(column=0, row=0)
         
         label_kakugen = ttk.Label(
-            tab_one,
+            tab1,
             text="【今日の格言】",
             foreground='white',
             font=("游明朝", 30)
@@ -302,7 +316,7 @@ class App(tk.Frame):
         
         msg = kakugen.random_generate()
         label_content = ttk.Label(
-            tab_one,
+            tab1,
             text=msg,
             foreground='white',
             font=("游明朝", 30)
@@ -324,6 +338,25 @@ class App(tk.Frame):
         ax.bar(x, y, tick_label=label)
         ax.set_ylim([0, 100])
         ax.set_ylabel("scores")
+        return fig
+    
+    def graph_3days(self):
+        fig = plt.figure(figsize=(4,3))
+        ax = fig.add_subplot()
+        x = np.array([1, 2, 3, 4])
+        y_brush = np.array([100, 50, self.progress_brush.get()*25, 0])
+        y_drink = np.array([0, 50, self.progress_drink.get()*25, 0])
+        y_senobi = np.array([50, 100, self.progress_senobi.get()*25, 0])
+        y_walk = np.array([25, 25, self.progress_walk.get()*25, 0])
+        y_face = np.array([100, 25, self.progress_face.get()*25, 0])
+        label = np.array(['7/2', '7/3', '7/4', ''])
+        ax.bar(x, y_brush, tick_label=label, label='brush', color='lawngreen', edgecolor='black', linewidth=0.3)
+        ax.bar(x, y_drink, tick_label=label, label='drink', bottom=y_brush, color='lightskyblue', edgecolor='black', linewidth=0.3)
+        ax.bar(x, y_senobi, tick_label=label, label='senobi', bottom=y_drink+y_brush, color='lightsalmon', edgecolor='black', linewidth=0.3)
+        ax.bar(x, y_walk, tick_label=label, label='walk', bottom=y_senobi+y_drink+y_brush, color='yellow', edgecolor='black', linewidth=0.3)
+        ax.bar(x, y_face, tick_label=label, label='face', bottom=y_walk+y_senobi+y_drink+y_brush, color='aqua', edgecolor='black', linewidth=0.3)
+        ax.legend(fontsize=7)
+        ax.set_ylabel('scores')
         return fig
             
     def loop(self):
