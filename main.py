@@ -174,28 +174,14 @@ class App(tk.Frame):
             width=400,
             height=400
         )
-        frame3.grid(column=1, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+        frame3.grid(column=0, row=2, sticky=(tk.N, tk.S, tk.E, tk.W))
         
-        button_start = ttk.Button(
+        button_study = ttk.Button(
             frame3,
-            text="start",
-            command=self.start
+            text="study",
+            command=self.create_dialog_study
         )
-        button_start.grid(column=0, row=0)
-        
-        button_stop = ttk.Button(
-            frame3,
-            text="stop",
-            command=self.stop
-        )
-        button_stop.grid(column=1, row=0)
-        
-        button_report = ttk.Button(
-            frame3,
-            text="report",
-            command=self.create_dialog_graph
-        )
-        button_report.grid(column=2, row=0)
+        button_study.grid(column=0, row=0)
         
         # frame4
         
@@ -205,10 +191,41 @@ class App(tk.Frame):
             width=400,
             height=400
         )
-        frame4.grid(column=1, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        frame4.grid(column=1, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        button_start = ttk.Button(
+            frame4,
+            text="start",
+            command=self.start
+        )
+        button_start.grid(column=0, row=0)
+        
+        button_stop = ttk.Button(
+            frame4,
+            text="stop",
+            command=self.stop
+        )
+        button_stop.grid(column=1, row=0)
+        
+        button_report = ttk.Button(
+            frame4,
+            text="report",
+            command=self.create_dialog_graph
+        )
+        button_report.grid(column=2, row=0)
+        
+        # frame5
+        
+        frame5 = ttk.Frame(
+            frame,
+            padding=10,
+            width=400,
+            height=400
+        )
+        frame5.grid(column=1, row=1, rowspan=2, sticky=(tk.N, tk.S, tk.E, tk.W))
         
         self.canvas = tk.Canvas(
-            frame4,
+            frame5,
             background='gray35'
         )
         self.canvas.grid(column=0, row=0)
@@ -389,6 +406,11 @@ class App(tk.Frame):
         ax.legend(fontsize=7)
         ax.set_ylabel('scores')
         return fig
+    
+    def create_dialog_study(self):
+        dlg = tk.Toplevel(self)
+        dlg.title("新たな行動の学習")
+        dlg.geometry("500x500")
             
     def loop(self):
         data = []
