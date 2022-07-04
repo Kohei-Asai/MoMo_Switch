@@ -1,15 +1,14 @@
-# import random
-
-# def get():
-#     return [random.uniform(-10,10),
-#             random.uniform(-10,10),
-#             random.uniform(-10,10),
-#             random.uniform(-10,10),
-#             random.uniform(-10,10),
-#             random.uniform(-10,10),
-#             random.uniform(-10,10),
-#             random.uniform(-10,10),
-#             random.uniform(-10,10)]
+def get():
+    import random
+    return [random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10),
+            random.uniform(-10,10)]
 
 """BLE connection between ESP32 and RaspberryPi"""
 import asyncio

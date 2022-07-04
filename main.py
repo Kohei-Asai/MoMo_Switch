@@ -394,7 +394,8 @@ class App(tk.Frame):
         data = []
         for _ in range(120):
             # dataどうやって受け取ればよい？
-            acc = ble.notification_handler()
+            # acc = ble.notification_handler()
+            acc = arduino.get()
             data.append(acc)
             time.sleep(1/120)
 
