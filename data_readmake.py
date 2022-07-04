@@ -51,6 +51,18 @@ def make_tensors_from_csv(load_paths, device='cpu'):
     data.append((x, y))
   return data
 
+def make_csvfile_onecategory(x, category_index, save_path):
+    #xは縦が時間方向、横が自由度方向、配列かnumpyの型を受け付ける
+    #save_pathは.csvまで含める
+    if type(x) != np.ndarray:
+        x = np.array(x)
+    index_np = np.array([[category_index] * x.shape[0]]).T
+    all_np = np.hstack([x, index_np])
+    all_list = all_np.tolist()
+    with open(save_path, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerows(all_list)
+
 def make_merged_csvfiles(person_directory):
     categories = []
     for name in glob.glob(person_directory + '\*'):
@@ -74,3 +86,9 @@ def make_merged_csvfiles(person_directory):
             with open(person_directory + '/Merged/' + str(i) + '.csv' , 'w') as f:
                 f.write(data)
         i += 1
+
+def make_csvfile_onecategory_test():
+    make_csvfile_onecategory([[1, 2], [3, 4], [5, 6]], 1, 'data/person1_test/Drink/2.csv')
+
+if __name__ == "__main__":
+    make_csvfile_onecategory_test()
