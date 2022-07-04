@@ -9,44 +9,6 @@ import csv
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
-def mat2array(load_path):
-  import scipy.io
-  mat = scipy.io.loadmat(load_path)
-  x = mat['x']
-  y = mat['y']
-  y = y[0]
-  return (x, y)
-
-def make_tensors_from_mat(load_paths, device='cpu'):
-  data = []
-  for load_path in load_paths:
-    x, y = mat2array(load_path)
-    x = torch.t(torch.tensor(x, dtype=torch.float))
-    x = x.to(device)
-    y = torch.tensor(y, dtype=torch.long)
-    y = y.to(device)
-    data.append((x, y))
-  return data
-
-def make_tensors_from_csv(load_paths, device='cpu'):
-  data = []
-  for load_path in load_paths:
-    with open(load_path, 'r') as f:
-      reader = csv.reader(f)
-      data_rows = []
-      for row in reader:
-        data_one_row = []
-        for item in row:
-          data_one_row.append(float(item))
-        data_rows.append(data_one_row)
-    all_matrix = torch.tensor(data_rows, dtype=torch.float)
-    x = all_matrix[:, :-1]
-    x = x.to(device)
-    y = all_matrix[:, -1]
-    y = y.to(device)
-    data.append((x, y))
-  return data
-
 def index2category(index):
   this_dic = {0:'Brush', 1:'Drink', 2:'WashFace', 3:'Walk', 4:'Senobi'}
   return this_dic[index]
@@ -143,7 +105,3 @@ def compare_accuracy(answer_tensor, prediction_tensor):
 #predicted_y = classificate(model, test_x, -0.15)
 #print(compare_accuracy(test_y, predicted_y))
 #compare_graph(test_y, predicted_y)
-
-if __name__ == '__main__':
-  the_tensor = make_tensors_from_csv(['data/person1/Drink/1.csv', 'data/person1/Walk/1.csv'])
-  print(the_tensor[1])
