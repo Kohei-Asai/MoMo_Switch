@@ -87,8 +87,12 @@ def make_merged_csvfiles(person_directory):
                 f.write(data)
         i += 1
 
+def make_tensors_from_csv_test():
+    answer = make_tensors_from_csv(['data/person1_test/Drink/1.csv', 'data/person1_test/Drink/2.csv'])
+    print(answer)
+
 def make_csvfile_onecategory_test():
     make_csvfile_onecategory([[1, 2], [3, 4], [5, 6]], 1, 'data/person1_test/Drink/2.csv')
 
 if __name__ == "__main__":
-    make_csvfile_onecategory_test()
+    make_tensors_from_csv_test()
