@@ -1,16 +1,10 @@
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.autograd import Variable
-import math
-import pandas as pd
 import numpy as np
 import csv
-import torch.optim as optim
-import matplotlib.pyplot as plt
 import glob
 import os
 import csv
+import random
 
 def mat2array(load_path):
   import scipy.io
@@ -63,11 +57,13 @@ def make_csvfile_onecategory(x, category_index, save_path):
         writer = csv.writer(f)
         writer.writerows(all_list)
 
-def make_merged_csvfiles(person_directory):
+def make_merged_csvfiles(person_directory, shuffle=True):
     categories = []
     for name in glob.glob(person_directory + '\*'):
         categories.append(name[len(person_directory) + 1:])
-    
+    if shuffle:
+        random.shuffle(categories)
+
     os.mkdir(person_directory + '/Merged')
     i=1
     flag = True
