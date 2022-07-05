@@ -440,7 +440,7 @@ class App(tk.Frame):
         
     def stop(self):
         self.after_cancel(self.jobID)
-        # arduinoの起動も止める必要がある
+        arduino.ble.stop()
         mixer.init()
         mixer.music.load("sounds/finish.mp3")
         mixer.music.play(1)
