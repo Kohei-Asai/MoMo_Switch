@@ -2,7 +2,7 @@ from pickle import PERSID
 import torch
 import torch.nn as nn
 import numpy as np
-from classifier import LSTMClassifier
+from machine_learning.classifier import LSTMClassifier
 
 INPUT_DIM = 9
 HIDDEN_DIM = 128

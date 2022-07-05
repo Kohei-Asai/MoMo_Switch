@@ -1,4 +1,6 @@
+import threading
 import time
+from bleak import BleakClient
 import tkinter as tk
 from tkinter import ttk
 from ttkthemes import *
@@ -8,8 +10,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import torch
 from pygame import mixer
-import arduino
-import classifier
+import arduino.arduino as arduino
+import machine_learning.classifier as classifier
 import kakugen
 
 class App(tk.Frame):
@@ -393,7 +395,15 @@ class App(tk.Frame):
     def loop(self):
         data = []
         for _ in range(120):
-            acc = arduino.get()
+            acc = [float(arduino.ble.accx),
+                    float(arduino.ble.accy),
+                    float(arduino.ble.accz),
+                    float(arduino.ble.gyrx),
+                    float(arduino.ble.gyry),
+                    float(arduino.ble.gyrz),
+                    float(arduino.ble.magx),
+                    float(arduino.ble.magy),
+                    float(arduino.ble.magz)]
             data.append(acc)
             time.sleep(1/120)
 
@@ -416,6 +426,7 @@ class App(tk.Frame):
         self.jobID = self.after(1, self.loop)
         
     def start(self):
+        t1.start()
         self.after(1000, self.loop)
         mixer.init()
         mixer.music.load("sounds/start.mp3")
@@ -426,6 +437,7 @@ class App(tk.Frame):
         
     def stop(self):
         self.after_cancel(self.jobID)
+        # arduinoの起動も止める必要がある
         mixer.init()
         mixer.music.load("sounds/finish.mp3")
         mixer.music.play(1)
@@ -438,5 +450,6 @@ if __name__ == "__main__":
         hidden_dim=128,
         target_dim=5
     )
+    t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
     app = App(master = root)
     app.mainloop()
