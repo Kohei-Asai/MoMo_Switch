@@ -1,6 +1,5 @@
 import threading
 import time
-from bleak import BleakClient
 import tkinter as tk
 from tkinter import ttk
 from ttkthemes import *
