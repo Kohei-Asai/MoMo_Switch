@@ -237,7 +237,7 @@ class App(tk.Frame):
             if self.done_brush == False:
                 self.done_brush = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_brush.set(self.progress_brush.get() + 1)
@@ -252,7 +252,7 @@ class App(tk.Frame):
             if self.done_drink == False:
                 self.done_drink = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_drink.set(self.progress_drink.get() + 1)
@@ -267,7 +267,7 @@ class App(tk.Frame):
             if self.done_senobi == False:
                 self.done_senobi = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_senobi.set(self.progress_senobi.get() + 1)
@@ -282,7 +282,7 @@ class App(tk.Frame):
             if self.done_walk == False:
                 self.done_walk = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_walk.set(self.progress_walk.get() + 1)
@@ -297,7 +297,7 @@ class App(tk.Frame):
             if self.done_face == False:
                 self.done_face = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_face.set(self.progress_face.get() + 1)
@@ -309,6 +309,10 @@ class App(tk.Frame):
         self.canvas.itemconfig(self.show_image, image=self.img_nothing)
             
     def create_dialog_graph(self):
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        
         dlg = tk.Toplevel(self)
         dlg.title("分析レポート")
         dlg.geometry("700x650")
@@ -431,8 +435,8 @@ class App(tk.Frame):
         mixer.init()
         mixer.music.load("sounds/start.mp3")
         mixer.music.play(1)
-        time.sleep(0.5)
-        mixer.music.load("sounds/csikos.mp3")
+        time.sleep(0.7)
+        mixer.music.load("sounds/PeerGynt.mp3")
         mixer.music.play(1)
         
     def stop(self):
