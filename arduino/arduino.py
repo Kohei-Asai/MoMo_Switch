@@ -63,15 +63,16 @@ class Esp32Ble():
     def main(self):
         self.loop = get_or_create_eventloop()
         self.task = asyncio.ensure_future(self.run(ADDRESS))
-        try:
-            self.loop.run_until_complete(self.task)
-        except KeyboardInterrupt:
-            print("KeyboardInterrupt!")
-            self.task.cancel()
-        except self.stop():
-            self.task.cancel()
-        finally:
-            self.loop.close()
+        self.loop.run_until_complete(self.task)
+        # try:
+        #     self.loop.run_until_complete(self.task)
+        # except KeyboardInterrupt:
+        #     print("KeyboardInterrupt!")
+        #     self.task.cancel()
+        # except self.stop():
+        #     self.task.cancel()
+        # finally:
+        #     self.loop.close()
             
 def get_or_create_eventloop():
     try:

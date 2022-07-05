@@ -429,6 +429,7 @@ class App(tk.Frame):
         self.jobID = self.after(1, self.loop)
         
     def start(self):
+        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
         t1.start()
         self.after(1000, self.loop)
         mixer.init()
@@ -453,6 +454,5 @@ if __name__ == "__main__":
         hidden_dim=128,
         target_dim=5
     )
-    t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
     app = App(master = root)
     app.mainloop()
