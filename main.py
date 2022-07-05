@@ -394,8 +394,8 @@ class App(tk.Frame):
         data = []
         for _ in range(120):
             # dataどうやって受け取ればよい？
-            # acc = ble.notification_handler()
-            acc = arduino.get()
+            acc = ble.notification_handler()
+            # acc = arduino.get()
             data.append(acc)
             time.sleep(1/120)
 
@@ -419,7 +419,7 @@ class App(tk.Frame):
         
     def start(self):
         self.after(1000, self.loop)
-        ble.run(arduino.ADDRESS)
+        ble.main()
         mixer.init()
         mixer.music.load("sounds/start.mp3")
         mixer.music.play(1)

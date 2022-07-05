@@ -17,7 +17,8 @@ import datetime
 # set characteristic uuid of Arduino, ESP32, etc...
 CHARACTERISTIC_UUID = "59668694-8d7d-11eb-8dcd-0242ac130004"
 # set ESP32 BLE address 
-ADDRESS = "B0B677EA-ACD8-4DC2-81B9-5AFE7D71F440"
+# ADDRESS = "B0B677EA-ACD8-4DC2-81B9-5AFE7D71F440"
+ADDRESS = "AE09B293-6D7E-FFD7-1697-EA9FCB160B8D"
 
 class Esp32Ble(object):
     """Base model for BLE connect"""
@@ -93,7 +94,7 @@ class Esp32Ble(object):
         except KeyboardInterrupt:
             print("KeyboardInterrupt!")
             task.cancel()
-            loop.run_forever()
+            # loop.run_forever()
         finally:
             loop.close()
             
