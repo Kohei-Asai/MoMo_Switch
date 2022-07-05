@@ -1,3 +1,4 @@
+import threading
 import time
 import tkinter as tk
 from tkinter import ttk
@@ -8,8 +9,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import torch
 from pygame import mixer
-import arduino
-import classifier
+import arduino.arduino as arduino
+import machine_learning.classifier as classifier
 import kakugen
 
 class App(tk.Frame):
@@ -252,7 +253,7 @@ class App(tk.Frame):
             if self.done_brush == False:
                 self.done_brush = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_brush.set(self.progress_brush.get() + 1)
@@ -267,7 +268,7 @@ class App(tk.Frame):
             if self.done_drink == False:
                 self.done_drink = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_drink.set(self.progress_drink.get() + 1)
@@ -282,7 +283,7 @@ class App(tk.Frame):
             if self.done_senobi == False:
                 self.done_senobi = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_senobi.set(self.progress_senobi.get() + 1)
@@ -297,7 +298,7 @@ class App(tk.Frame):
             if self.done_walk == False:
                 self.done_walk = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_walk.set(self.progress_walk.get() + 1)
@@ -312,7 +313,7 @@ class App(tk.Frame):
             if self.done_face == False:
                 self.done_face = True
                 mixer.init()
-                mixer.music.load("sounds/complete.mp3")
+                mixer.music.load("sounds/shining.mp3")
                 mixer.music.play(1)
         else:
             self.progress_face.set(self.progress_face.get() + 1)
@@ -324,6 +325,10 @@ class App(tk.Frame):
         self.canvas.itemconfig(self.show_image, image=self.img_nothing)
             
     def create_dialog_graph(self):
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        
         dlg = tk.Toplevel(self)
         dlg.title("分析レポート")
         dlg.geometry("700x650")
@@ -415,7 +420,15 @@ class App(tk.Frame):
     def loop(self):
         data = []
         for _ in range(120):
-            acc = arduino.get()
+            acc = [float(arduino.ble.accx),
+                    float(arduino.ble.accy),
+                    float(arduino.ble.accz),
+                    float(arduino.ble.gyrx),
+                    float(arduino.ble.gyry),
+                    float(arduino.ble.gyrz),
+                    float(arduino.ble.magx),
+                    float(arduino.ble.magy),
+                    float(arduino.ble.magz)]
             data.append(acc)
             time.sleep(1/120)
 
@@ -438,16 +451,19 @@ class App(tk.Frame):
         self.jobID = self.after(1, self.loop)
         
     def start(self):
+        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
+        t1.start()
         self.after(1000, self.loop)
         mixer.init()
         mixer.music.load("sounds/start.mp3")
         mixer.music.play(1)
-        time.sleep(0.5)
-        mixer.music.load("sounds/csikos.mp3")
+        time.sleep(0.7)
+        mixer.music.load("sounds/PeerGynt.mp3")
         mixer.music.play(1)
         
     def stop(self):
         self.after_cancel(self.jobID)
+        arduino.ble.stop()
         mixer.init()
         mixer.music.load("sounds/finish.mp3")
         mixer.music.play(1)
@@ -455,7 +471,7 @@ class App(tk.Frame):
 if __name__ == "__main__":
     root = ThemedTk()
     model = classifier.load_model(
-        model_path='model_9freedom.pth',
+        model_path='machine_learning/model_9freedom.pth',
         input_dim=9,
         hidden_dim=128,
         target_dim=5
