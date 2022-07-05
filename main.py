@@ -16,6 +16,8 @@ import kakugen
 class App(tk.Frame):
     def __init__(self, master = None):
         super().__init__(master)
+        
+        # メイン画面
 
         master.title("ウェアラブルデバイスの画面")
         master.geometry("600x300")
@@ -323,6 +325,8 @@ class App(tk.Frame):
             
     def update_nothing(self):
         self.canvas.itemconfig(self.show_image, image=self.img_nothing)
+        
+    # 分析結果
             
     def create_dialog_graph(self):
         mixer.init()
@@ -412,10 +416,23 @@ class App(tk.Frame):
         ax.set_ylabel('scores')
         return fig
     
+    # 学習用画面
+    
     def create_dialog_study(self):
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        
         dlg = tk.Toplevel(self)
         dlg.title("新たな行動の学習")
         dlg.geometry("500x500")
+        
+        frame = ttk.Frame(
+            dlg,
+            width=500,
+            height=500
+        )
+        frame.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
             
     def loop(self):
         data = []
