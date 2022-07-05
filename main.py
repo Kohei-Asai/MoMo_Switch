@@ -10,8 +10,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import torch
 from pygame import mixer
-import arduino
-import classifier
+import arduino.arduino as arduino
+import machine_learning.classifier as classifier
 import kakugen
 
 class App(tk.Frame):
