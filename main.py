@@ -445,7 +445,7 @@ class App(tk.Frame):
 if __name__ == "__main__":
     root = ThemedTk()
     model = classifier.load_model(
-        model_path='model_9freedom.pth',
+        model_path='machine_learning/model_9freedom.pth',
         input_dim=9,
         hidden_dim=128,
         target_dim=5
