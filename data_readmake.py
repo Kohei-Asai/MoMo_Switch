@@ -40,7 +40,7 @@ def make_tensors_from_csv(load_paths, device='cpu'):
     all_matrix = torch.tensor(data_rows, dtype=torch.float)
     x = all_matrix[:, :-1]
     x = x.to(device)
-    y = all_matrix[:, -1]
+    y = all_matrix[:, -1].long()
     y = y.to(device)
     data.append((x, y))
   return data
