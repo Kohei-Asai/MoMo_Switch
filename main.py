@@ -1,9 +1,7 @@
-from heapq import merge
 import threading
 import time
 import tkinter as tk
 from tkinter import ttk
-from pyparsing import col
 from ttkthemes import *
 from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
