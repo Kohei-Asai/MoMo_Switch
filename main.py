@@ -8,7 +8,6 @@ from pygame import mixer
 import torch
 import arduino.arduino as arduino
 import machine_learning.classifier as classifier
-import machine_learning.data_readmake as data_readmake
 
 class App(tk.Frame):
     def __init__(self, master = None):
