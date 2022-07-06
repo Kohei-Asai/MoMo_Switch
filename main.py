@@ -18,16 +18,9 @@ import kakugen
 class App(tk.Frame):
     def __init__(self, master = None):
         super().__init__(master)
-        
-        # メイン画面
 
-        master.title("main window (wearable device)")
-        master.geometry("600x300")
-        
-        style = ttk.Style()
-        style.theme_use('black')
-        
-        # 変数
+        self.master.title("main window (wearable device)")
+        self.master.geometry("600x300")
         
         self.progress_brush = tk.IntVar(value=0)
         self.progress_drink = tk.IntVar(value=0)
@@ -42,36 +35,45 @@ class App(tk.Frame):
         self.done_walk = False
         self.done_face = False
         
-        frame = ttk.Frame(
-            master,
+        self.create_widgets()
+        
+    def create_widgets(self):
+        self.style = ttk.Style()
+        self.style.theme_use('black')
+        
+        self.frame_main = ttk.Frame(
+            self.master,
             padding=10,
             width=600,
             height=300,
         )
-        frame.pack(expand=True, fill='both')
+        self.frame_main.pack(expand=True, fill='both')
         
-        # frame1
+        self.create_frame_pbar()
+        self.create_frame_actions()
+        self.create_frame_measure_report()
+        self.create_frame_start_stop()
+        self.create_frame_image()
         
-        frame1 = ttk.Frame(
-            frame,
+    def create_frame_pbar(self):
+        frame_pbar = ttk.Frame(
+            self.frame_main,
             padding=10,
             width=400,
             height=250
         )
-        frame1.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
-        
-        # 進捗バー
+        frame_pbar.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
         
         label_all = ttk.Label(
-            frame1,
+            frame_pbar,
             text="score"
         )
         label_all.grid(column=0, row=0)
         
-        style.configure("red.Horizontal.TProgressbar", background='green2')
+        self.style.configure("red.Horizontal.TProgressbar", background='green2')
 
         pbar_all = ttk.Progressbar(
-            frame1,
+            frame_pbar,
             orient=tk.HORIZONTAL,
             variable=self.progress_all,
             maximum=20,
@@ -81,27 +83,26 @@ class App(tk.Frame):
         )
         pbar_all.grid(column=1, row=0)
         
-        # frame2
-        
-        frame2 = ttk.Frame(
-            frame,
+    def create_frame_actions(self):
+        frame_actions = ttk.Frame(
+            self.frame_main,
             padding=10,
             width=400,
             height=400
         )
-        frame2.grid(column=0, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        frame_actions.grid(column=0, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
         
         # brush
         
         button_brush = ttk.Button(
-            frame2,
+            frame_actions,
             text="brush",
             command=self.update_brush
         )
         button_brush.grid(column=0, row=1)
         
         self.label_brush_completed = ttk.Label(
-            frame2,
+            frame_actions,
             text="Washroom: Brush Teeth",
             foreground="white",
         )
@@ -110,14 +111,14 @@ class App(tk.Frame):
         # drink
         
         button_drink = ttk.Button(
-            frame2,
+            frame_actions,
             text="drink",
             command=self.update_drink
         )
         button_drink.grid(column=0, row=2)
     
         self.label_drink_completed = ttk.Label(
-            frame2,
+            frame_actions,
             text="Kitchen: Drink Water",
             foreground="white",
         )
@@ -126,14 +127,14 @@ class App(tk.Frame):
         # senobi
         
         button_senobi = ttk.Button(
-            frame2,
+            frame_actions,
             text="senobi",
             command=self.update_senobi
         )
         button_senobi.grid(column=0, row=3)
         
         self.label_senobi_completed = ttk.Label(
-            frame2,
+            frame_actions,
             text="Bedroom: Senobi",
             foreground="white",
         )
@@ -142,14 +143,14 @@ class App(tk.Frame):
         # walk
         
         button_walk = ttk.Button(
-            frame2,
+            frame_actions,
             text="walk",
             command=self.update_walk
         )
         button_walk.grid(column=0, row=4)
         
         self.label_walk_completed = ttk.Label(
-            frame2,
+            frame_actions,
             text="EveryWhere: Walk",
             foreground="white",
         )
@@ -158,79 +159,76 @@ class App(tk.Frame):
         # face
         
         button_face = ttk.Button(
-            frame2,
+            frame_actions,
             text="face",
             command=self.update_face
         )
         button_face.grid(column=0, row=5)
         
         self.label_face_completed = ttk.Label(
-            frame2,
+            frame_actions,
             text="Washroom: Wash Face",
             foreground="white",
         )
         self.label_face_completed.grid(column=1, row=5)
         
-        # frame3
-        
-        frame3 = ttk.Frame(
-            frame,
+    def create_frame_measure_report(self):
+        frame_measure_report = ttk.Frame(
+            self.frame_main,
             padding=10,
             width=400,
             height=400
         )
-        frame3.grid(column=0, row=2, sticky=(tk.N, tk.S, tk.E, tk.W))
+        frame_measure_report.grid(column=0, row=2, sticky=(tk.N, tk.S, tk.E, tk.W))
         
-        button_study = ttk.Button(
-            frame3,
+        button_measure = ttk.Button(
+            frame_measure_report,
             text="measure",
             command=self.create_dialog_measure
         )
-        button_study.grid(column=0, row=0)
+        button_measure.grid(column=0, row=0)
         
         button_report = ttk.Button(
-            frame3,
+            frame_measure_report,
             text="report",
             command=self.create_dialog_graph
         )
         button_report.grid(column=1, row=0)
         
-        # frame4
-        
-        frame4 = ttk.Frame(
-            frame,
+    def create_frame_start_stop(self):
+        frame_start_stop = ttk.Frame(
+            self.frame_main,
             padding=10,
             width=400,
             height=400
         )
-        frame4.grid(column=1, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+        frame_start_stop.grid(column=1, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
         
         button_start = ttk.Button(
-            frame4,
+            frame_start_stop,
             text="start",
             command=self.start
         )
         button_start.grid(column=0, row=0)
         
         button_stop = ttk.Button(
-            frame4,
+            frame_start_stop,
             text="stop",
             command=self.stop
         )
         button_stop.grid(column=1, row=0)
         
-        # frame5
-        
-        frame5 = ttk.Frame(
-            frame,
+    def create_frame_image(self):
+        frame_image = ttk.Frame(
+            self.frame_main,
             padding=10,
             width=400,
             height=400
         )
-        frame5.grid(column=1, row=1, rowspan=2, sticky=(tk.N, tk.S, tk.E, tk.W))
+        frame_image.grid(column=1, row=1, rowspan=2, sticky=(tk.N, tk.S, tk.E, tk.W))
         
         self.canvas = tk.Canvas(
-            frame5,
+            frame_image,
             background='gray35'
         )
         self.canvas.grid(column=0, row=0)
@@ -720,7 +718,7 @@ class App(tk.Frame):
 if __name__ == "__main__":
     root = ThemedTk()
     model = classifier.load_model(
-        model_path='machine_learning/model_9freedom.pth',
+        model_path='models/model_9freedom.pth',
         input_dim=9,
         hidden_dim=128,
         target_dim=5
