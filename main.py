@@ -27,6 +27,8 @@ class App(tk.Frame):
         self.done_walk = False
         self.done_face = False
         
+    # メイン画面
+        
     def main(self):
         self.master.title("main window (wearable device)")
         self.master.geometry("600x300")
@@ -240,6 +242,35 @@ class App(tk.Frame):
             h / 2,                   
             image=self.img_nothing
         )
+    # 分析画面
+            
+    def create_dialog_graph(self):
+        from app.graph_dialog import GraphDialog
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        
+        self.dlg = tk.Toplevel(self)
+        self.dlg.title("analysis report")
+        self.dlg.geometry("700x650")
+        
+        app = GraphDialog(self.progress_brush, self.progress_drink, self.progress_senobi, self.progress_walk, self.progress_face, self.dlg)
+        app.main()
+    
+    # 計測用画面
+    
+    def create_dialog_measure(self):
+        from app.measure_dialog import MeasureDialog
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        
+        self.dlg = tk.Toplevel(self)
+        self.dlg.title("measure & merge")
+        self.dlg.geometry("500x500")
+        
+        app = MeasureDialog(self.dlg)
+        app.main()
         
     def loop(self):
         data = []
@@ -369,36 +400,6 @@ class App(tk.Frame):
             
     def update_nothing(self):
         self.canvas.itemconfig(self.show_image, image=self.img_nothing)
-        
-    # 分析画面
-            
-    def create_dialog_graph(self):
-        from graph_dialog import GraphDialog
-        mixer.init()
-        mixer.music.load("sounds/button.mp3")
-        mixer.music.play(1)
-        
-        self.dlg = tk.Toplevel(self)
-        self.dlg.title("analysis report")
-        self.dlg.geometry("700x650")
-        
-        app = GraphDialog(self.progress_brush, self.progress_drink, self.progress_senobi, self.progress_walk, self.progress_face, self.dlg)
-        app.main()
-    
-    # 計測用画面
-    
-    def create_dialog_measure(self):
-        from measure_dialog import MeasureDialog
-        mixer.init()
-        mixer.music.load("sounds/button.mp3")
-        mixer.music.play(1)
-        
-        self.dlg = tk.Toplevel(self)
-        self.dlg.title("measure & merge")
-        self.dlg.geometry("500x500")
-        
-        app = MeasureDialog(self.dlg)
-        app.main()
 
 if __name__ == "__main__":
     root = ThemedTk()

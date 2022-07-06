@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import main
-import kakugen
+import app.kakugen as kakugen
 
 class GraphDialog(main.App):
     def __init__(self, progress_brush, progress_drink, progress_senobi, progress_walk, progress_face, master=None):
