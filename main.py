@@ -20,6 +20,14 @@ class App(tk.Frame):
         self.progress_face = tk.IntVar(value=0)
         self.progress_all = tk.IntVar(value=0)
         
+        self.img_nothing = ImageTk.PhotoImage(Image.open('images/sleep.png').resize((200,200)))
+        self.img_brush = ImageTk.PhotoImage(Image.open('images/brush.png').resize((200,200)))
+        self.img_drink = ImageTk.PhotoImage(Image.open('images/drink.png').resize((200,200)))
+        self.img_senobi = ImageTk.PhotoImage(Image.open('images/senobi.png').resize((200,200)))
+        self.img_walk = ImageTk.PhotoImage(Image.open('images/walk.png').resize((200,200)))
+        self.img_face = ImageTk.PhotoImage(Image.open('images/washface.png').resize((200,200)))
+        self.img_finish = ImageTk.PhotoImage(Image.open('images/finish.png').resize((200,200)))
+        
         self.done_brush = False
         self.done_drink = False
         self.done_senobi = False
@@ -226,13 +234,6 @@ class App(tk.Frame):
             background='gray35'
         )
         self.canvas.grid(column=0, row=0)
-        self.img_nothing = ImageTk.PhotoImage(Image.open('images/sleep.png').resize((200,200)))
-        self.img_brush = ImageTk.PhotoImage(Image.open('images/brush.png').resize((200,200)))
-        self.img_drink = ImageTk.PhotoImage(Image.open('images/drink.png').resize((200,200)))
-        self.img_senobi = ImageTk.PhotoImage(Image.open('images/senobi.png').resize((200,200)))
-        self.img_walk = ImageTk.PhotoImage(Image.open('images/walk.png').resize((200,200)))
-        self.img_face = ImageTk.PhotoImage(Image.open('images/washface.png').resize((200,200)))
-        self.img_finish = ImageTk.PhotoImage(Image.open('images/finish.png').resize((200,200)))
         self.update()
         w = self.canvas.winfo_width()
         h = self.canvas.winfo_height()
