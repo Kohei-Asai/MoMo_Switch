@@ -4,23 +4,16 @@ import tkinter as tk
 from tkinter import ttk
 from ttkthemes import *
 from PIL import ImageTk, Image
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import numpy as np
 import torch
 from pygame import mixer
 import os
 import arduino.arduino as arduino
 import machine_learning.classifier as classifier
 import machine_learning.data_readmake as data_readmake
-import kakugen
 
 class App(tk.Frame):
     def __init__(self, master = None):
         super().__init__(master)
-
-        self.master.title("main window (wearable device)")
-        self.master.geometry("600x300")
         
         self.progress_brush = tk.IntVar(value=0)
         self.progress_drink = tk.IntVar(value=0)
@@ -35,9 +28,10 @@ class App(tk.Frame):
         self.done_walk = False
         self.done_face = False
         
-        self.create_widgets()
+    def main(self):
+        self.master.title("main window (wearable device)")
+        self.master.geometry("600x300")
         
-    def create_widgets(self):
         self.style = ttk.Style()
         self.style.theme_use('black')
         
@@ -380,92 +374,17 @@ class App(tk.Frame):
     # 分析結果
             
     def create_dialog_graph(self):
+        from graph_dialog import GraphDialog
         mixer.init()
         mixer.music.load("sounds/button.mp3")
         mixer.music.play(1)
         
-        dlg = tk.Toplevel(self)
-        dlg.title("analysis report")
-        dlg.geometry("700x650")
+        self.dlg = tk.Toplevel(self)
+        self.dlg.title("analysis report")
+        self.dlg.geometry("700x650")
         
-        notebook = ttk.Notebook(dlg)
-        notebook.pack(expand=True, fill='both')
-        tab1 = ttk.Frame(
-            notebook,
-            width=600,
-            height=600
-        )
-        tab2 = ttk.Frame(
-            notebook,
-            width=600,
-            height=600
-        )
-        
-        notebook.add(tab1, text="today")
-        notebook.add(tab2, text="3 days")
-        
-        fig_today = self.graph_today()
-        canvas_today = FigureCanvasTkAgg(fig_today, master=tab1)
-        canvas_today.draw()
-        canvas_today.get_tk_widget().grid(column=0, row=0)
-        
-        fig_3days = self.graph_3days()
-        canvas_3days = FigureCanvasTkAgg(fig_3days, master=tab2)
-        canvas_3days.draw()
-        canvas_3days.get_tk_widget().grid(column=0, row=0)
-        
-        label_kakugen = ttk.Label(
-            tab1,
-            text="【今日の格言】",
-            foreground='white',
-            font=("游明朝", 30)
-        )
-        label_kakugen.grid(column=0, row=1)
-        
-        msg = kakugen.random_generate()
-        label_content = ttk.Label(
-            tab1,
-            text=msg,
-            foreground='white',
-            font=("游明朝", 30)
-        )
-        label_content.grid(column=0, row=2, sticky=(tk.N, tk.S, tk.E, tk.W))
-        
-    def graph_today(self):
-        fig = plt.figure(figsize=(4,3))
-        ax = fig.add_subplot()
-        x = np.array([1, 2, 3, 4, 5])
-        y = np.array([
-            self.progress_brush.get()*25,
-            self.progress_drink.get()*25,
-            self.progress_senobi.get()*25,
-            self.progress_walk.get()*25,
-            self.progress_face.get()*25
-        ])
-        label = np.array(['Brush', 'Drink', 'Senobi', 'Walk', 'Face'])
-        ax.bar(x, y, tick_label=label)
-        ax.set_ylim([0, 100])
-        ax.set_ylabel("scores")
-        return fig
-    
-    def graph_3days(self):
-        fig = plt.figure(figsize=(4,3))
-        ax = fig.add_subplot()
-        x = np.array([1, 2, 3, 4])
-        y_brush = np.array([100, 50, self.progress_brush.get()*25, 0])
-        y_drink = np.array([0, 50, self.progress_drink.get()*25, 0])
-        y_senobi = np.array([50, 100, self.progress_senobi.get()*25, 0])
-        y_walk = np.array([25, 25, self.progress_walk.get()*25, 0])
-        y_face = np.array([100, 25, self.progress_face.get()*25, 0])
-        label = np.array(['7/2', '7/3', '7/4', ''])
-        ax.bar(x, y_brush, tick_label=label, label='brush', color='lawngreen', edgecolor='black', linewidth=0.3)
-        ax.bar(x, y_drink, tick_label=label, label='drink', bottom=y_brush, color='lightskyblue', edgecolor='black', linewidth=0.3)
-        ax.bar(x, y_senobi, tick_label=label, label='senobi', bottom=y_drink+y_brush, color='lightsalmon', edgecolor='black', linewidth=0.3)
-        ax.bar(x, y_walk, tick_label=label, label='walk', bottom=y_senobi+y_drink+y_brush, color='yellow', edgecolor='black', linewidth=0.3)
-        ax.bar(x, y_face, tick_label=label, label='face', bottom=y_walk+y_senobi+y_drink+y_brush, color='aqua', edgecolor='black', linewidth=0.3)
-        ax.legend(fontsize=7)
-        ax.set_ylabel('scores')
-        return fig
+        app = GraphDialog(self.progress_brush, self.progress_drink, self.progress_senobi, self.progress_walk, self.progress_face, self.dlg)
+        app.main()
     
     # 計測用画面
     
@@ -724,4 +643,5 @@ if __name__ == "__main__":
         target_dim=5
     )
     app = App(master = root)
+    app.main()
     app.mainloop()
