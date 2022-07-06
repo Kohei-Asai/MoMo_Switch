@@ -1,7 +1,9 @@
+from heapq import merge
 import threading
 import time
 import tkinter as tk
 from tkinter import ttk
+from pyparsing import col
 from ttkthemes import *
 from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
@@ -9,8 +11,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
 import torch
 from pygame import mixer
+import os
 import arduino.arduino as arduino
 import machine_learning.classifier as classifier
+import machine_learning.data_readmake as data_readmake
 import kakugen
 
 class App(tk.Frame):
@@ -19,7 +23,7 @@ class App(tk.Frame):
         
         # メイン画面
 
-        master.title("ウェアラブルデバイスの画面")
+        master.title("main window (wearable device)")
         master.geometry("600x300")
         
         style = ttk.Style()
@@ -27,12 +31,12 @@ class App(tk.Frame):
         
         # 変数
         
-        self.progress_brush = tk.IntVar(0)
-        self.progress_drink = tk.IntVar(0)
-        self.progress_senobi = tk.IntVar(0)
-        self.progress_walk = tk.IntVar(0)
-        self.progress_face = tk.IntVar(0)
-        self.progress_all = tk.IntVar(0)
+        self.progress_brush = tk.IntVar(value=0)
+        self.progress_drink = tk.IntVar(value=0)
+        self.progress_senobi = tk.IntVar(value=0)
+        self.progress_walk = tk.IntVar(value=0)
+        self.progress_face = tk.IntVar(value=0)
+        self.progress_all = tk.IntVar(value=0)
         
         self.done_brush = False
         self.done_drink = False
@@ -46,7 +50,7 @@ class App(tk.Frame):
             width=600,
             height=300,
         )
-        frame.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+        frame.pack(expand=True, fill='both')
         
         # frame1
         
@@ -62,7 +66,7 @@ class App(tk.Frame):
         
         label_all = ttk.Label(
             frame1,
-            text="進捗"
+            text="score"
         )
         label_all.grid(column=0, row=0)
         
@@ -181,10 +185,17 @@ class App(tk.Frame):
         
         button_study = ttk.Button(
             frame3,
-            text="study",
-            command=self.create_dialog_study
+            text="measure",
+            command=self.create_dialog_measure
         )
         button_study.grid(column=0, row=0)
+        
+        button_report = ttk.Button(
+            frame3,
+            text="report",
+            command=self.create_dialog_graph
+        )
+        button_report.grid(column=1, row=0)
         
         # frame4
         
@@ -209,13 +220,6 @@ class App(tk.Frame):
             command=self.stop
         )
         button_stop.grid(column=1, row=0)
-        
-        button_report = ttk.Button(
-            frame4,
-            text="report",
-            command=self.create_dialog_graph
-        )
-        button_report.grid(column=2, row=0)
         
         # frame5
         
@@ -247,6 +251,57 @@ class App(tk.Frame):
             h / 2,                   
             image=self.img_nothing
         )
+        
+    def loop(self):
+        data = []
+        for _ in range(100):
+            acc = [float(arduino.ble.accx),
+                    float(arduino.ble.accy),
+                    float(arduino.ble.accz),
+                    float(arduino.ble.gyrx),
+                    float(arduino.ble.gyry),
+                    float(arduino.ble.gyrz),
+                    float(arduino.ble.magx),
+                    float(arduino.ble.magy),
+                    float(arduino.ble.magz)]
+            data.append(acc)
+            time.sleep(1/100)
+
+        x = torch.tensor(data, dtype=torch.float)
+        result = classifier.classificate(model, x)[-1]
+        
+        if result == 0:
+            self.update_brush()
+        elif result == 1:
+            self.update_drink()
+        elif result == 2:
+            self.update_face()
+        elif result == 3:
+            self.update_walk()
+        elif result == 4:
+            self.update_senobi()
+        else:
+            self.update_nothing()
+            
+        self.jobID = self.after(1, self.loop)
+        
+    def start(self):
+        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
+        t1.start()
+        self.after(10, self.loop)
+        mixer.init()
+        mixer.music.load("sounds/start.mp3")
+        mixer.music.play(1)
+        time.sleep(0.7)
+        mixer.music.load("sounds/PeerGynt.mp3")
+        mixer.music.play(1)
+        
+    def stop(self):
+        self.after_cancel(self.jobID)
+        arduino.ble.stop()
+        mixer.init()
+        mixer.music.load("sounds/finish.mp3")
+        mixer.music.play(1)
 
     def update_brush(self):
         if self.progress_brush.get() >= 4:
@@ -334,11 +389,11 @@ class App(tk.Frame):
         mixer.music.play(1)
         
         dlg = tk.Toplevel(self)
-        dlg.title("分析レポート")
+        dlg.title("analysis report")
         dlg.geometry("700x650")
         
         notebook = ttk.Notebook(dlg)
-        notebook.pack(expand=True, fill='both', padx=20, pady=20)
+        notebook.pack(expand=True, fill='both')
         tab1 = ttk.Frame(
             notebook,
             width=600,
@@ -350,8 +405,8 @@ class App(tk.Frame):
             height=600
         )
         
-        notebook.add(tab1, text="今日の結果")
-        notebook.add(tab2, text="3日間の結果")
+        notebook.add(tab1, text="today")
+        notebook.add(tab2, text="3 days")
         
         fig_today = self.graph_today()
         canvas_today = FigureCanvasTkAgg(fig_today, master=tab1)
@@ -416,28 +471,213 @@ class App(tk.Frame):
         ax.set_ylabel('scores')
         return fig
     
-    # 学習用画面
+    # 計測用画面
     
-    def create_dialog_study(self):
+    def create_dialog_measure(self):
         mixer.init()
         mixer.music.load("sounds/button.mp3")
         mixer.music.play(1)
         
         dlg = tk.Toplevel(self)
-        dlg.title("新たな行動の学習")
+        dlg.title("measure & merge")
         dlg.geometry("500x500")
+        
+        self.count = 0
         
         frame = ttk.Frame(
             dlg,
-            width=500,
-            height=500
+            padding=10,
         )
-        frame.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
-            
-    def loop(self):
-        data = []
-        for _ in range(120):
-            acc = [float(arduino.ble.accx),
+        frame.pack(expand=True, fill='both')
+        
+        # 1. create your directry
+        
+        frame_yourdir = ttk.Frame(
+            frame,
+            padding=10,
+            width=500,
+            height=100
+        )
+        frame_yourdir.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        label_yourdir_explanation = ttk.Label(
+            frame_yourdir,
+            padding=5,
+            text='1. Create Your Directory'
+        )
+        label_yourdir_explanation.grid(column=0, row=0, columnspan=3, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        label_yourdir_yourname = ttk.Label(
+            frame_yourdir,
+            padding=5,
+            text='Your Name'
+        )
+        label_yourdir_yourname.grid(column=0, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        self.entry_yourdir = ttk.Entry(
+            frame_yourdir,
+        )
+        self.entry_yourdir.grid(column=1, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        button_yourdir = ttk.Button(
+            frame_yourdir,
+            text='create',
+            command=self.create_your_directory
+        )
+        button_yourdir.grid(column=2, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        # 2. create each action's directory
+        
+        frame_action_label = ttk.Frame(
+            frame,
+            padding=10,
+            width=500,
+            height=100
+        )
+        frame_action_label.grid(column=0, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        label_action_explanation = ttk.Label(
+            frame_action_label,
+            padding=5,
+            text='2. Create Directory of Each Action'
+        )
+        label_action_explanation.grid(column=0, row=0, columnspan=3, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        label_action_label = ttk.Label(
+            frame_action_label,
+            padding=5,
+            text='Action Name'
+        )
+        label_action_label.grid(column=0, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        self.entry_action = ttk.Entry(
+            frame_action_label,
+        )
+        self.entry_action.grid(column=1, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        button_action = ttk.Button(
+            frame_action_label,
+            text='create',
+            command=self.create_action_directory
+        )
+        button_action.grid(column=2, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        # 3. measure your data
+        
+        frame_measure = ttk.Frame(
+            frame,
+            padding=10,
+            width=500,
+            height=200
+        )
+        frame_measure.grid(column=0, row=2, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        label_measure_explanation = ttk.Label(
+            frame_measure,
+            padding=5,
+            text='3. Measure Your Data'
+        )
+        label_measure_explanation.grid(column=0, row=0, columnspan=2, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        button_start = ttk.Button(
+            frame_measure,
+            padding=5,
+            text='start',
+            command=self.start_study
+        )
+        button_start.grid(column=0, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        button_stop = ttk.Button(
+            frame_measure,
+            padding=5,
+            text='stop',
+            command=self.stop_measure
+        )
+        button_stop.grid(column=1, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        self.labelvar = tk.StringVar("")
+        self.labelvar.set("ready to start")
+        label_doing = ttk.Label(
+            frame_measure,
+            padding=5,
+            textvariable=self.labelvar
+        )
+        label_doing.grid(column=0, row=2, columnspan=2)
+        
+        button_save = ttk.Button(
+            frame_measure,
+            padding=5,
+            text='save',
+            command=self.save
+        )
+        button_save.grid(column=0, row=3, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        self.count_label = tk.StringVar("")
+        self.count_label.set(str(self.count) + "/10 completed")
+        label_donecount = ttk.Label(
+            frame_measure,
+            padding=5,
+            textvariable=self.count_label
+        )
+        label_donecount.grid(column=1, row=3)
+        
+        # 4. merge data
+        
+        frame_merge = ttk.Frame(
+            frame,
+            padding=10,
+            width=500,
+            height=200
+        )
+        frame_merge.grid(column=0, row=3, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        label_merge_explanation = ttk.Label(
+            frame_merge,
+            padding=5,
+            text='3. Merge Data'
+        )
+        label_merge_explanation.grid(column=0, row=0, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+        button_merge = ttk.Button(
+            frame_merge,
+            padding=5,
+            text='merge',
+            command=self.merge
+        )
+        button_merge.grid(column=0, row=1, sticky=(tk.N, tk.S, tk.E, tk.W))
+        
+    def create_your_directory(self):
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        name = self.entry_yourdir.get()
+        os.mkdir("data/"+name)
+        
+    def create_action_directory(self):
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        self.count = 0
+        self.count_label.set(str(self.count) + "/10 completed")
+        name = self.entry_yourdir.get()
+        action = self.entry_action.get()
+        os.mkdir("data/"+name+"/"+action)
+        
+    def start_study(self):
+        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
+        t1.start()
+        self.after(10, self.measure)
+        mixer.init()
+        mixer.music.load("sounds/start.mp3")
+        mixer.music.play(1)
+        self.labelvar.set("doing......")
+        
+    def measure(self):
+        self.data = []
+        self.after(1000, self.loop_measure)
+        
+    def loop_measure(self):
+        acc = [float(arduino.ble.accx),
                     float(arduino.ble.accy),
                     float(arduino.ble.accz),
                     float(arduino.ble.gyrx),
@@ -446,44 +686,38 @@ class App(tk.Frame):
                     float(arduino.ble.magx),
                     float(arduino.ble.magy),
                     float(arduino.ble.magz)]
-            data.append(acc)
-            time.sleep(1/120)
-
-        x = torch.tensor(data, dtype=torch.float)
-        result = classifier.classificate(model, x)[-1]
+        if acc != [0,0,0,0,0,0,0,0,0]:
+            self.data.append(acc)
+        self.jobID = self.after(10, self.loop_measure)
         
-        if result == 0:
-            self.update_brush()
-        elif result == 1:
-            self.update_drink()
-        elif result == 2:
-            self.update_face()
-        elif result == 3:
-            self.update_walk()
-        elif result == 4:
-            self.update_senobi()
-        else:
-            self.update_nothing()
-            
-        self.jobID = self.after(1, self.loop)
-        
-    def start(self):
-        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
-        t1.start()
-        self.after(1000, self.loop)
-        mixer.init()
-        mixer.music.load("sounds/start.mp3")
-        mixer.music.play(1)
-        time.sleep(0.7)
-        mixer.music.load("sounds/PeerGynt.mp3")
-        mixer.music.play(1)
-        
-    def stop(self):
+    def stop_measure(self):
         self.after_cancel(self.jobID)
         arduino.ble.stop()
         mixer.init()
         mixer.music.load("sounds/finish.mp3")
         mixer.music.play(1)
+        self.labelvar.set("wait for saving")
+    
+    def save(self):
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        name = self.entry_yourdir.get()
+        action = self.entry_action.get()
+        cindex = classifier.category2index[action]
+        self.count = self.count + 1
+        save_path = 'data/'+name+'/'+action+'/'+action+str(self.count)+'.csv'
+        data_readmake.make_csvfile_onecategory(self.data, cindex, save_path)
+        self.count_label.set(str(self.count) + "/10 completed")
+        self.labelvar.set("ready to start")
+        
+    def merge(self):
+        mixer.init()
+        mixer.music.load("sounds/button.mp3")
+        mixer.music.play(1)
+        name = self.entry_yourdir.get()
+        yourpath = 'data/'+name
+        data_readmake.make_merged_csvfiles(yourpath)
 
 if __name__ == "__main__":
     root = ThemedTk()
