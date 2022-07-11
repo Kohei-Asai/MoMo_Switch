@@ -61,23 +61,27 @@ def make_merged_csvfiles(person_directory, shuffle=True):
     categories = []
     for name in glob.glob(person_directory + '\*'):
         categories.append(name[len(person_directory) + 1:])
-    if shuffle:
-        random.shuffle(categories)
+    print(categories)
 
-    os.mkdir(person_directory + '/Merged')
+    if not os.path.exists(person_directory + '/Merged'):
+      os.mkdir(person_directory + '/Merged')
     i=1
     flag = True
     while flag:
         data = ""
-        for category in categories:
-            try:
-                f = open(person_directory + '/'+ category + '/'+  str(i) + '.csv')
-            except OSError as e:
-                flag = False
-            else:
+        if shuffle:
+          now_categories = random.sample(categories, len(categories))
+        else:
+          now_categories = categories
+        for category in now_categories:
+            csv_path = person_directory + '/'+ category + '/'+  category + str(i) + '.csv'
+            if os.path.exists(csv_path):
+                f = open(csv_path)
                 if flag:
                     data += f.read()
                 f.close()
+            else:
+                flag = False
         if flag:
             with open(person_directory + '/Merged/' + str(i) + '.csv' , 'w') as f:
                 f.write(data)
@@ -91,4 +95,4 @@ def make_csvfile_onecategory_test():
     make_csvfile_onecategory([[1, 2], [3, 4], [5, 6]], 1, 'data/person1_test/Drink/2.csv')
 
 if __name__ == "__main__":
-    make_tensors_from_csv_test()
+    make_merged_csvfiles('data/hirata')
