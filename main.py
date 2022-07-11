@@ -293,7 +293,7 @@ class App(ttk.Frame):
             time.sleep(1/100)
 
         x = torch.tensor(data, dtype=torch.float)
-        result = classifier.classificate(model, x, -0.15)[-1]
+        result = classifier.classificate(model, x)[-1]
         
         if result == 0:
             self.update_brush()
@@ -311,6 +311,8 @@ class App(ttk.Frame):
         self.jobID = self.after(1, self.loop)
         
     def start(self):
+        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
+        t1.start()
         self.after(10, self.loop)
         mixer.init()
         mixer.music.load("sounds/start.mp3")
@@ -320,6 +322,7 @@ class App(ttk.Frame):
         mixer.music.play(1)
         
     def stop(self):
+        arduino.ble.stop()
         self.after_cancel(self.jobID)
         mixer.init()
         mixer.music.load("sounds/finish.mp3")

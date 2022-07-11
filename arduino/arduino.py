@@ -42,7 +42,7 @@ class Esp32Ble():
         self.magx = list_splitted[6]
         self.magy = list_splitted[7]
         self.magz = list_splitted[8]
-        self.value_print()
+        # self.value_print()
         
     async def run(self, address):
         async with BleakClient(address) as client:

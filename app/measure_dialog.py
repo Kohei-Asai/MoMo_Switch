@@ -1,3 +1,4 @@
+import threading
 import tkinter as tk
 from tkinter import ttk
 from pygame import mixer
@@ -13,6 +14,9 @@ class MeasureDialog(main.App):
         super().__init__(master)
         
     def main(self):
+        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
+        t1.start()
+        
         self.count = 0
         
         self.frame_main = ttk.Frame(
@@ -217,6 +221,7 @@ class MeasureDialog(main.App):
                     float(arduino.ble.magx),
                     float(arduino.ble.magy),
                     float(arduino.ble.magz)]
+        print(acc)
         if acc != [0,0,0,0,0,0,0,0,0]:
             self.data.append(acc)
         self.jobID = self.after(10, self.loop_measure)
