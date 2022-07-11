@@ -92,7 +92,7 @@ class GraphDialog(main.App):
         y_senobi = np.array([50, 100, self.progress_senobi.get()*25, 0])
         y_walk = np.array([25, 25, self.progress_walk.get()*25, 0])
         y_face = np.array([100, 25, self.progress_face.get()*25, 0])
-        label = np.array(['7/2', '7/3', '7/4', ''])
+        label = np.array(['7/11', '7/12', '7/13', ''])
         ax.bar(x, y_brush, tick_label=label, label='brush', color='lawngreen', edgecolor='black', linewidth=0.3)
         ax.bar(x, y_drink, tick_label=label, label='drink', bottom=y_brush, color='lightskyblue', edgecolor='black', linewidth=0.3)
         ax.bar(x, y_senobi, tick_label=label, label='senobi', bottom=y_drink+y_brush, color='lightsalmon', edgecolor='black', linewidth=0.3)
