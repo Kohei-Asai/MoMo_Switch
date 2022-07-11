@@ -198,8 +198,6 @@ class MeasureDialog(main.App):
         os.mkdir("data/"+name+"/"+action)
         
     def start_study(self):
-        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
-        t1.start()
         self.after(10, self.measure)
         mixer.init()
         mixer.music.load("sounds/start.mp3")
@@ -226,7 +224,6 @@ class MeasureDialog(main.App):
         
     def stop_measure(self):
         self.after_cancel(self.jobID)
-        arduino.ble.stop()
         mixer.init()
         mixer.music.load("sounds/finish.mp3")
         mixer.music.play(1)
