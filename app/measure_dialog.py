@@ -1,4 +1,3 @@
-import threading
 import tkinter as tk
 from tkinter import ttk
 from pygame import mixer
