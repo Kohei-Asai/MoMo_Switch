@@ -221,7 +221,7 @@ class MeasureDialog(main.App):
                     float(arduino.ble.magx),
                     float(arduino.ble.magy),
                     float(arduino.ble.magz)]
-        print(acc)
+        # print(acc)
         if acc != [0,0,0,0,0,0,0,0,0]:
             self.data.append(acc)
         self.jobID = self.after(10, self.loop_measure)
