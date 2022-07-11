@@ -37,6 +37,9 @@ class App(tk.Frame):
     # メイン画面
         
     def main(self):
+        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
+        t1.start()
+        
         self.master.title("main window (wearable device)")
         self.master.geometry("600x300")
         
@@ -272,6 +275,8 @@ class App(tk.Frame):
         app = MeasureDialog(self.dlg)
         app.main()
         
+    # 更新処理
+        
     def loop(self):
         data = []
         for _ in range(100):
@@ -288,7 +293,7 @@ class App(tk.Frame):
             time.sleep(1/100)
 
         x = torch.tensor(data, dtype=torch.float)
-        result = classifier.classificate(model, x)[-1]
+        result = classifier.classificate(model, x, -0.15)[-1]
         
         if result == 0:
             self.update_brush()
@@ -306,8 +311,6 @@ class App(tk.Frame):
         self.jobID = self.after(1, self.loop)
         
     def start(self):
-        t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))
-        t1.start()
         self.after(10, self.loop)
         mixer.init()
         mixer.music.load("sounds/start.mp3")
@@ -318,7 +321,6 @@ class App(tk.Frame):
         
     def stop(self):
         self.after_cancel(self.jobID)
-        arduino.ble.stop()
         mixer.init()
         mixer.music.load("sounds/finish.mp3")
         mixer.music.play(1)
@@ -412,3 +414,4 @@ if __name__ == "__main__":
     app = App(master = root)
     app.main()
     app.mainloop()
+    arduino.ble.stop()
