@@ -9,7 +9,7 @@ import torch
 import arduino.arduino as arduino
 import machine_learning.classifier as classifier
 
-class App(tk.Frame):
+class App(ttk.Frame):
     def __init__(self, master = None):
         super().__init__(master)
         
