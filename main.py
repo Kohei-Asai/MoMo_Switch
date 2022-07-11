@@ -293,7 +293,7 @@ class App(ttk.Frame):
             time.sleep(1/100)
 
         x = torch.tensor(data, dtype=torch.float)
-        result = classifier.classificate(model, x)[-1]
+        result = classifier.classificate(model, x, -0.15)[-1]
         
         if result == 0:
             self.update_brush()
@@ -409,7 +409,7 @@ class App(ttk.Frame):
 if __name__ == "__main__":
     root = ThemedTk()
     model = classifier.load_model(
-        model_path='models/model_9freedom.pth',
+        model_path='models/model_hirata.pth',
         input_dim=9,
         hidden_dim=128,
         target_dim=5
