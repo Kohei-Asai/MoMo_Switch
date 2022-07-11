@@ -308,7 +308,7 @@ class App(ttk.Frame):
         else:
             self.update_nothing()
             
-        self.jobID = self.after(1, self.loop)
+        self.jobID = self.after(10, self.loop)
         
     def start(self):
         t1 = threading.Thread(target=arduino.ArduinoRun, args=("t1",))

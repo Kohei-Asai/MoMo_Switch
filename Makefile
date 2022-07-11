@@ -4,7 +4,7 @@ setup:
 	pip install pygame
 	pip install bleak
 
-make ble_setup:
+ble_setup:
 	python3 arduino/ble_get_information.py
 
 run:
