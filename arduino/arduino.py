@@ -1,8 +1,6 @@
 import asyncio
-import threading
 from bleak import BleakClient
 import datetime
-import main
 # set characteristic uuid of Arduino, ESP32, etc...
 CHARACTERISTIC_UUID = "59668694-8d7d-11eb-8dcd-0242ac130004"
 # set ESP32 BLE address 

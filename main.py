@@ -99,83 +99,48 @@ class App(ttk.Frame):
         
         # brush
         
-        button_brush = ttk.Button(
-            frame_actions,
-            text="brush",
-            command=self.update_brush
-        )
-        button_brush.grid(column=0, row=1)
-        
         self.label_brush_completed = ttk.Label(
             frame_actions,
             text="Washroom: Brush Teeth",
             foreground="white",
         )
-        self.label_brush_completed.grid(column=1, row=1)
+        self.label_brush_completed.grid(column=0, row=1)
         
         # drink
-        
-        button_drink = ttk.Button(
-            frame_actions,
-            text="drink",
-            command=self.update_drink
-        )
-        button_drink.grid(column=0, row=2)
     
         self.label_drink_completed = ttk.Label(
             frame_actions,
             text="Kitchen: Drink Water",
             foreground="white",
         )
-        self.label_drink_completed.grid(column=1, row=2)
+        self.label_drink_completed.grid(column=0, row=2)
         
         # senobi
-        
-        button_senobi = ttk.Button(
-            frame_actions,
-            text="senobi",
-            command=self.update_senobi
-        )
-        button_senobi.grid(column=0, row=3)
         
         self.label_senobi_completed = ttk.Label(
             frame_actions,
             text="Bedroom: Senobi",
             foreground="white",
         )
-        self.label_senobi_completed.grid(column=1, row=3)
+        self.label_senobi_completed.grid(column=0, row=3)
         
         # walk
-        
-        button_walk = ttk.Button(
-            frame_actions,
-            text="walk",
-            command=self.update_walk
-        )
-        button_walk.grid(column=0, row=4)
         
         self.label_walk_completed = ttk.Label(
             frame_actions,
             text="EveryWhere: Walk",
             foreground="white",
         )
-        self.label_walk_completed.grid(column=1, row=4)
+        self.label_walk_completed.grid(column=0, row=4)
         
         # face
-        
-        button_face = ttk.Button(
-            frame_actions,
-            text="face",
-            command=self.update_face
-        )
-        button_face.grid(column=0, row=5)
         
         self.label_face_completed = ttk.Label(
             frame_actions,
             text="Washroom: Wash Face",
             foreground="white",
         )
-        self.label_face_completed.grid(column=1, row=5)
+        self.label_face_completed.grid(column=0, row=5)
         
     def create_frame_measure_report(self):
         frame_measure_report = ttk.Frame(
@@ -293,7 +258,7 @@ class App(ttk.Frame):
             time.sleep(1/100)
 
         x = torch.tensor(data, dtype=torch.float)
-        result = classifier.classificate(model, x, -0.15)[-1]
+        result = classifier.classificate(model, x)[-1]
         
         if result == 0:
             self.update_brush()
