@@ -5,6 +5,7 @@ import datetime
 CHARACTERISTIC_UUID = "59668694-8d7d-11eb-8dcd-0242ac130004"
 # set ESP32 BLE address 
 # ble_get_information.pyから取得して変更する
+# ADDRESS = "3C36454E-4BE6-1379-E275-272096BCF9C9"
 ADDRESS = "AE09B293-6D7E-FFD7-1697-EA9FCB160B8D"
 
 class Esp32Ble():
