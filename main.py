@@ -28,12 +28,6 @@ class App(ttk.Frame):
         self.img_face = ImageTk.PhotoImage(Image.open('images/washface.png').resize((200,200)))
         self.img_finish = ImageTk.PhotoImage(Image.open('images/finish.png').resize((200,200)))
         
-        self.done_brush = False
-        self.done_drink = False
-        self.done_senobi = False
-        self.done_walk = False
-        self.done_face = False
-        
     # メイン画面
         
     def main(self):
@@ -330,13 +324,15 @@ class App(ttk.Frame):
 
     def update_brush(self):
         if self.progress_brush.get() >= 4:
+            self.canvas.itemconfig(self.show_image, image=self.img_brush)
+        elif self.progress_brush.get() == 3:
+            mixer.init()
+            mixer.music.load("sounds/shining.mp3")
+            mixer.music.play(1)
+            self.progress_brush.set(self.progress_brush.get() + 1)
+            self.progress_all.set(self.progress_all.get() + 1)
             self.label_brush_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
-            if self.done_brush == False:
-                self.done_brush = True
-                mixer.init()
-                mixer.music.load("sounds/shining.mp3")
-                mixer.music.play(1)
         else:
             self.progress_brush.set(self.progress_brush.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -345,13 +341,15 @@ class App(ttk.Frame):
             
     def update_drink(self):
         if self.progress_drink.get() >= 4:
+            self.canvas.itemconfig(self.show_image, image=self.img_drink)
+        elif self.progress_drink.get() == 3:
+            mixer.init()
+            mixer.music.load("sounds/shining.mp3")
+            mixer.music.play(1)
+            self.progress_drink.set(self.progress_drink.get() + 1)
+            self.progress_all.set(self.progress_all.get() + 1)
             self.label_drink_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
-            if self.done_drink == False:
-                self.done_drink = True
-                mixer.init()
-                mixer.music.load("sounds/shining.mp3")
-                mixer.music.play(1)
         else:
             self.progress_drink.set(self.progress_drink.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -360,13 +358,15 @@ class App(ttk.Frame):
             
     def update_senobi(self):
         if self.progress_senobi.get() >= 4:
+            self.canvas.itemconfig(self.show_image, image=self.img_senobi)
+        elif self.progress_senobi.get() == 3:
+            mixer.init()
+            mixer.music.load("sounds/shining.mp3")
+            mixer.music.play(1)
+            self.progress_senobi.set(self.progress_senobi.get() + 1)
+            self.progress_all.set(self.progress_all.get() + 1)
             self.label_senobi_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
-            if self.done_senobi == False:
-                self.done_senobi = True
-                mixer.init()
-                mixer.music.load("sounds/shining.mp3")
-                mixer.music.play(1)
         else:
             self.progress_senobi.set(self.progress_senobi.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -375,13 +375,15 @@ class App(ttk.Frame):
             
     def update_walk(self):
         if self.progress_walk.get() >= 4:
+            self.canvas.itemconfig(self.show_image, image=self.img_walk)
+        elif self.progress_walk.get() == 3:
+            mixer.init()
+            mixer.music.load("sounds/shining.mp3")
+            mixer.music.play(1)
+            self.progress_walk.set(self.progress_walk.get() + 1)
+            self.progress_all.set(self.progress_all.get() + 1)
             self.label_walk_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
-            if self.done_walk == False:
-                self.done_walk = True
-                mixer.init()
-                mixer.music.load("sounds/shining.mp3")
-                mixer.music.play(1)
         else:
             self.progress_walk.set(self.progress_walk.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
@@ -390,13 +392,15 @@ class App(ttk.Frame):
             
     def update_face(self):
         if self.progress_face.get() >= 4:
+            self.canvas.itemconfig(self.show_image, image=self.img_face)
+        elif self.progress_face.get() == 3:
+            mixer.init()
+            mixer.music.load("sounds/shining.mp3")
+            mixer.music.play(1)
+            self.progress_face.set(self.progress_face.get() + 1)
+            self.progress_all.set(self.progress_all.get() + 1)
             self.label_face_completed["foreground"] = "lime green"
             self.canvas.itemconfig(self.show_image, image=self.img_finish)
-            if self.done_face == False:
-                self.done_face = True
-                mixer.init()
-                mixer.music.load("sounds/shining.mp3")
-                mixer.music.play(1)
         else:
             self.progress_face.set(self.progress_face.get() + 1)
             self.progress_all.set(self.progress_all.get() + 1)
