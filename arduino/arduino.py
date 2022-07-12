@@ -5,7 +5,8 @@ import datetime
 CHARACTERISTIC_UUID = "59668694-8d7d-11eb-8dcd-0242ac130004"
 # set ESP32 BLE address 
 # ble_get_information.pyから取得して変更する
-ADDRESS = "AE09B293-6D7E-FFD7-1697-EA9FCB160B8D"
+# ADDRESS = "AE09B293-6D7E-FFD7-1697-EA9FCB160B8D"
+ADDRESS = "3C36454E-4BE6-1379-E275-272096BCF9C9"
 
 class Esp32Ble():
     def __init__(self, data_dump_size: int=2048):
@@ -40,7 +41,7 @@ class Esp32Ble():
         self.magx = list_splitted[6]
         self.magy = list_splitted[7]
         self.magz = list_splitted[8]
-        self.value_print()
+        # self.value_print()
         
     async def run(self, address):
         async with BleakClient(address) as client:
